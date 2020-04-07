@@ -8,7 +8,6 @@
 #include <Magnum/GL/Renderer.h>
 #include <Magnum/GL/PixelFormat.h>
 #include <Magnum/GL/Context.h>
-#include <Magnum/GL/Shader.h>
 #include <Magnum/GL/Version.h>
 #include <Magnum/Math/Color.h>
 #include <Magnum/Math/FunctionsBatch.h>
@@ -64,8 +63,6 @@ namespace Magnum {
         bool _bMouseInteraction = true;
         List L;
 
-        /* Camera helpers */
-
 
 
 
@@ -80,10 +77,10 @@ Magnum::Natures::Natures(const Arguments &arguments) : Platform::Application{arg
                                                                                              "Magnum ImGui Example")
                                                                                      .setWindowFlags(
                                                                                              Configuration::WindowFlag::Resizable)} {
-    _imGuiContext = ImGuiIntegration::Context(Vector2{windowSize()} / dpiScaling(),
+    _imGuiContext = ImGuiIntegration::Context(Vector2{WINDOW_X,WINDOW_Y} / dpiScaling(),
                                               windowSize(), framebufferSize());
 
-    spriteBatch.init();
+    L = List();
     setMinimalLoopPeriod(16);
     _timeline.start();
     GL::Renderer::setBlendEquation(GL::Renderer::BlendEquation::Add,
@@ -111,15 +108,16 @@ void Magnum::Natures::drawEvent() {
         if (!_pausedSimulation) {
             _imGuiContext.newFrame();
 
-            spriteBatch.begin();
             Magnum::GL::defaultFramebuffer.clear(GL::FramebufferClear::Color | GL::FramebufferClear::Depth);
             L.Remove();;
             L.Behavior();
             L.Place();
+            spriteBatch.begin();
 
 
             for (auto &organism : L.organisms)
                 spriteBatch.draw(organism.getRectangle(), organism.getVisuals());
+
             spriteBatch.end();
             spriteBatch.renderBatch();
 //                        shader.update()

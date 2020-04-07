@@ -33,9 +33,10 @@
 #include <Corrade/Containers/Reference.h>
 #include <Magnum/GL/Shader.h>
 #include <Magnum/GL/Version.h>
-#include <Magnum/Math/Matrix3.h>
 
-Magnum::GeoShader::GeoShader() {
+GeoShader::GeoShader() {
+
+
     Magnum::GL::Shader vert{Magnum::GL::Version::GLES320, Magnum::GL::Shader::Type::Vertex};
     Magnum::GL::Shader geo{Magnum::GL::Version::GLES320, Magnum::GL::Shader::Type::Geometry};
     Magnum::GL::Shader frag{Magnum::GL::Version::GLES320, Magnum::GL::Shader::Type::Fragment};
@@ -43,9 +44,9 @@ Magnum::GeoShader::GeoShader() {
     geo.addSource(genomShader);
     frag.addSource(fragShader);
 
-    CORRADE_INTERNAL_ASSERT_OUTPUT(GL::Shader::compile({vert}));
-    CORRADE_INTERNAL_ASSERT_OUTPUT(GL::Shader::compile({geo}));
-    CORRADE_INTERNAL_ASSERT_OUTPUT(GL::Shader::compile({frag}));
+    CORRADE_INTERNAL_ASSERT_OUTPUT(Magnum::GL::Shader::compile({vert}));
+    CORRADE_INTERNAL_ASSERT_OUTPUT(Magnum::GL::Shader::compile({geo}));
+    CORRADE_INTERNAL_ASSERT_OUTPUT(Magnum::GL::Shader::compile({frag}));
     attachShaders({vert, geo, frag});
     CORRADE_INTERNAL_ASSERT(link());
 }

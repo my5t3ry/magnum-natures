@@ -41,25 +41,19 @@
 #include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
 
-namespace Magnum {
 
-    class GeoShader : public GL::AbstractShaderProgram {
-    public:
-        GeoShader();
+class GeoShader : public Magnum::GL::AbstractShaderProgram {
+public:
+    GeoShader();
 
-    public:
-        enum ColorMode {
-            UniformDiffuseColor = 0,
-            RampColorById
-        };
+    typedef Magnum::GL::Attribute<0, Magnum::Math::Vector2<float>> pos;
+    typedef Magnum::GL::Attribute<1, Magnum::Math::Vector3<float >> color;
+    typedef Magnum::GL::Attribute<2, float> sides;
 
-        typedef Magnum::GL::Attribute<0, glm::vec2> pos;
-        typedef Magnum::GL::Attribute<1, glm::vec3> color;
-        typedef Magnum::GL::Attribute<2, float> sides;
+private:
+    using Magnum::GL::AbstractShaderProgram::drawTransformFeedback;
+    using Magnum::GL::AbstractShaderProgram::dispatchCompute;
+};
 
-    private:
-    };
-
-}
 
 #endif
