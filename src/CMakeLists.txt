@@ -6,14 +6,14 @@ if (PROJECT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
 endif ()
 
 corrade_add_resource(NATURES_RESOURCES resources.conf)
-
-add_executable(embedfile inc/opengl/embed.cpp)
-
-add_custom_command(
-        OUTPUT  ${PROJECT_BINARY_DIR}/inc/vertex_shader.h
-        COMMAND embedfile vertex_shader inc/opengl/shaders/theshader.vert ${CMAKE_BINARY_DIR}/vertex_shader.h
-        DEPENDS inc/opengl/shaders/theshader.vert
-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+#
+#add_executable(embedfile inc/opengl/embed.cpp)
+#
+#add_custom_command(
+#        OUTPUT  ${PROJECT_BINARY_DIR}/inc/vertex_shader.h
+#        COMMAND embedfile vertex_shader inc/opengl/shaders/theshader.vert ${CMAKE_BINARY_DIR}/vertex_shader.h
+#        DEPENDS inc/opengl/shaders/theshader.vert
+#        WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 
 
 include_directories(inc)

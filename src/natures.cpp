@@ -1,6 +1,8 @@
 
 #include <Magnum/Magnum.h>
+
 #define MAGNUM_TARGET_GLES3
+
 #include <Corrade/Containers/Pointer.h>
 #include <Magnum/GL/DefaultFramebuffer.h>
 #include <Magnum/GL/Renderer.h>
@@ -79,14 +81,11 @@ Magnum::Natures::Natures(const Arguments &arguments) : Platform::Application{arg
                                                                                      .setWindowFlags(
                                                                                              Configuration::WindowFlag::Resizable)} {
     _imGuiContext = ImGuiIntegration::Context(Vector2{windowSize()} / dpiScaling(),
-                                       windowSize(), framebufferSize());
+                                              windowSize(), framebufferSize());
 
     spriteBatch.init();
     setMinimalLoopPeriod(16);
     _timeline.start();
-    /* Set up proper blending to be used by ImGui. There's a great chance
-       you'll need this exact behavior for the rest of your scene. If not, set
-       this only for the drawFrame() call. */
     GL::Renderer::setBlendEquation(GL::Renderer::BlendEquation::Add,
                                    GL::Renderer::BlendEquation::Add);
     GL::Renderer::setBlendFunction(GL::Renderer::BlendFunction::SourceAlpha,
@@ -100,7 +99,6 @@ Magnum::Natures::Natures(const Arguments &arguments) : Platform::Application{arg
 
 void Magnum::Natures::drawEvent() {
     GL::defaultFramebuffer.clear(GL::FramebufferClear::Color | GL::FramebufferClear::Depth);
-    _imGuiContext.newFrame();
 
     /* Enable text input, if needed */
     if (ImGui::GetIO().WantTextInput && !isTextInputActive())
@@ -110,14 +108,13 @@ void Magnum::Natures::drawEvent() {
 
     /* Draw objects */
     {
-
-
         if (!_pausedSimulation) {
+            _imGuiContext.newFrame();
+
             spriteBatch.begin();
             Magnum::GL::defaultFramebuffer.clear(GL::FramebufferClear::Color | GL::FramebufferClear::Depth);
-            _imGuiContext.newFrame();
-            L.Remove();
-       ;     L.Behavior();
+            L.Remove();;
+            L.Behavior();
             L.Place();
 
 
@@ -126,29 +123,29 @@ void Magnum::Natures::drawEvent() {
             spriteBatch.end();
             spriteBatch.renderBatch();
 //                        shader.update()
+
+
+            /* Menu for parameters */
+            if (_showMenu) showMenu();
+
+            /* Update application cursor */
+            _imGuiContext.updateApplicationCursor(*this);
+
+            /* Render ImGui window */
+            {
+                GL::Renderer::enable(GL::Renderer::Feature::Blending);
+                GL::Renderer::disable(GL::Renderer::Feature::FaceCulling);
+                GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
+                GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
+
+                _imGuiContext.drawFrame();
+
+                GL::Renderer::disable(GL::Renderer::Feature::ScissorTest);
+                GL::Renderer::enable(GL::Renderer::Feature::DepthTest);
+                GL::Renderer::enable(GL::Renderer::Feature::FaceCulling);
+                GL::Renderer::disable(GL::Renderer::Feature::Blending);
+            }
         }
-
-        /* Menu for parameters */
-        if (_showMenu) showMenu();
-
-        /* Update application cursor */
-        _imGuiContext.updateApplicationCursor(*this);
-
-        /* Render ImGui window */
-        {
-            GL::Renderer::enable(GL::Renderer::Feature::Blending);
-            GL::Renderer::disable(GL::Renderer::Feature::FaceCulling);
-            GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
-            GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
-
-            _imGuiContext.drawFrame();
-
-            GL::Renderer::disable(GL::Renderer::Feature::ScissorTest);
-            GL::Renderer::enable(GL::Renderer::Feature::DepthTest);
-            GL::Renderer::enable(GL::Renderer::Feature::FaceCulling);
-            GL::Renderer::disable(GL::Renderer::Feature::Blending);
-        }
-
         swapBuffers();
 
         /* Run next frame immediately */
@@ -186,7 +183,7 @@ void Magnum::Natures::keyPressEvent(KeyEvent &event) {
 //            default:
 //                if (_imGuiContext.handleKeyPressEvent(event))
 //                    event.setAccepted(true);
-    }
+}
 
 void Magnum::Natures::keyReleaseEvent(KeyEvent &event) {
     if (_imGuiContext.handleKeyReleaseEvent(event)) {

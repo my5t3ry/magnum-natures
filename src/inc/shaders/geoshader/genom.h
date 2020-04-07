@@ -2,20 +2,18 @@
 #ifndef  TXT_HEADER_genomShader
 #define  TXT_HEADER_genomShader
 
-std::string  genomShader =
-        "#version 320 es"
-        "\n"
+const std::string  genomShader =
         "\n"
         "layout(points) in;"
         "\n"
-        "layout(triangle_strip, max_vertices = 2000) out;"
+        "layout(triangle_strip, max_vertices = 64) out;"
         "\n"
         "\n"
-        "in vec3 vColor[];"
+        "in highp vec3[] vColor;"
         "\n"
-        "in float vSides[];"
+        "in highp float[] vSides;"
         "\n"
-        "out vec3 fColor;"
+        "out highp  vec3 fColor;"
         "\n"
         "\n"
         "const float PI = 3.1415926;"
@@ -28,7 +26,7 @@ std::string  genomShader =
         "  fColor = vColor[0];"
         "\n"
         "\n"
-        "  for (float i = 0.0; i <= vSides[0]; i+=1.0) {	        // Angle between each side in radians"
+        "  for (float i = 0.0; i <= vSides[0]; i+=1.0) {	        // Angle between each side in highp highp radians"
         "\n"
         "    float ang = PI * 2.0 / vSides[0] * i;"
         "\n"

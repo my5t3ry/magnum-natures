@@ -49,6 +49,7 @@ void SpriteBatch::renderBatch() {
     mesh.addVertexBuffer(posBuffer, 0, 0, 0);
     mesh.addVertexBuffer(colorBuffer, 0, 0, 1);
     mesh.addVertexBuffer(sidesBuffer, 0, 0, 2);
+    mesh.setCount(posBuffer.size());
     shader.draw(mesh);
 }
 

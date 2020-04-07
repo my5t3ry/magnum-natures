@@ -43,8 +43,8 @@ Magnum::GeoShader::GeoShader() {
     geo.addSource(genomShader);
     frag.addSource(fragShader);
 
-//    CORRADE_INTERNAL_ASSERT_OUTPUT(GL::Shader::compile({vert}));
-//    CORRADE_INTERNAL_ASSERT_OUTPUT(GL::Shader::compile({geo}));
+    CORRADE_INTERNAL_ASSERT_OUTPUT(GL::Shader::compile({vert}));
+    CORRADE_INTERNAL_ASSERT_OUTPUT(GL::Shader::compile({geo}));
     CORRADE_INTERNAL_ASSERT_OUTPUT(GL::Shader::compile({frag}));
     attachShaders({vert, geo, frag});
     CORRADE_INTERNAL_ASSERT(link());

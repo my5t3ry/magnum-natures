@@ -3,12 +3,12 @@
 #define  TXT_HEADER_fragShader
 
 
-std::string  fragShader =
-"#version 320 es"
+const std::string  fragShader =
+//"#version 320 es\n"
+//"\n"
+"in highp vec3 fColor; "
 "\n"
-"in vec3 fColor; "
-"\n"
-"out vec4 outColor;"
+"out highp vec4 outColor;"
 "\n"
 "void main()"
 "\n"
