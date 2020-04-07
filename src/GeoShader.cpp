@@ -31,95 +31,25 @@
 #include "inc/shaders/geoshader/GeoShader.h"
 
 #include <Corrade/Containers/Reference.h>
-#include <Corrade/Utility/Resource.h>
 #include <Magnum/GL/Shader.h>
 #include <Magnum/GL/Version.h>
-#include <Magnum/Math/Color.h>
 #include <Magnum/Math/Matrix3.h>
-#include <glm/ext/matrix_float4x4.hpp>
-#include <opengl/camera.hpp>
-#include <opengl/transform.hpp>
 
 Magnum::GeoShader::GeoShader() {
+    Magnum::GL::Shader vert{Magnum::GL::Version::GLES320, Magnum::GL::Shader::Type::Vertex};
+    Magnum::GL::Shader geo{Magnum::GL::Version::GLES320, Magnum::GL::Shader::Type::Geometry};
+    Magnum::GL::Shader frag{Magnum::GL::Version::GLES320, Magnum::GL::Shader::Type::Fragment};
+    vert.addSource(vertShader);
+    geo.addSource(genomShader);
+    frag.addSource(fragShader);
 
-    Magnum::GL::Shader m_shaders[NUM_SHADERS] = {
-            CreateShader("inc/opengl/shader/theshader.vert", Magnum::GL::Shader::Type::Vertex),
-            CreateShader("inc/opengl/shader/theshader.geom", Magnum::GL::Shader::Type::Geometry),
-            CreateShader("inc/opengl/shader/theshader.frag", Magnum::GL::Shader::Type::Fragment)};
-
-    CORRADE_INTERNAL_ASSERT_OUTPUT(Magnum::GL::Shader::compile({m_shaders[0], m_shaders[2], m_shaders[3]}));
-
-    attachShaders({m_shaders[0], m_shaders[2], m_shaders[3]});
-
-
-    CORRADE_INTERNAL_ASSERT(GL::Shader::compile({m_shaders[0], m_shaders[1], m_shaders[2]}));
+//    CORRADE_INTERNAL_ASSERT_OUTPUT(GL::Shader::compile({vert}));
+//    CORRADE_INTERNAL_ASSERT_OUTPUT(GL::Shader::compile({geo}));
+    CORRADE_INTERNAL_ASSERT_OUTPUT(GL::Shader::compile({frag}));
+    attachShaders({vert, geo, frag});
     CORRADE_INTERNAL_ASSERT(link());
-
-    _uNumParticles = uniformLocation("numParticles");
-    _uParticleRadius = uniformLocation("particleRadius");
-
-    _uColorMode = uniformLocation("colorMode");
-    _uColor = uniformLocation("uniformColor");
-
-    _uViewProjectionMatrix = uniformLocation("viewProjectionMatrix");
-    _uScreenHeight = uniformLocation("screenHeight");
-    _uDomainHeight = uniformLocation("domainHeight");
-
 }
 
-
-GeoShader &Magnum::GeoShader::setNumParticles(Int numParticles) {
-    setUniform(_uNumParticles, numParticles);
-    return *this;
-}
-
-GeoShader &Magnum::GeoShader::setParticleRadius(Float radius) {
-    setUniform(_uParticleRadius, radius);
-    return *this;
-}
-
-GeoShader &Magnum::GeoShader::setColorMode(Int colorMode) {
-    setUniform(_uColorMode, colorMode);
-    return *this;
-}
-
-GeoShader &Magnum::GeoShader::setColor(const Color3 &color) {
-    setUniform(_uColor, color);
-    return *this;
-}
-
-GeoShader &Magnum::GeoShader::setViewProjectionMatrix(const Matrix3 &matrix) {
-    setUniform(_uViewProjectionMatrix, matrix);
-    return *this;
-}
-
-GeoShader &Magnum::GeoShader::setScreenHeight(Int height) {
-    setUniform(_uScreenHeight, height);
-    return *this;
-}
-
-GeoShader &Magnum::GeoShader::setDomainHeight(Int height) {
-    setUniform(_uDomainHeight, height);
-    return *this;
-}
-
-}}
-
-Magnum::GL::Shader Magnum::GeoShader::CreateShader(const std::string &fileName, Magnum::GL::Shader::Type shaderType) {
-    Magnum::GL::Shader shader{Magnum::GL::Version::GL460, shaderType};
-    shader.addFile(fileName);
-
-
-    return shader;
-}
-
-
-void Magnum::GeoShader::Update(const Transform &transform, const Camera &camera) {
-    glm::mat4 MVP = transform.GetMVP(camera);
-    glm::mat4 Normal = transform.GetModel();
-
-    glUniformMatrix4fv(m_uniforms[0], 1, GL_FALSE, &MVP[0][0]);
-}
 
 
 

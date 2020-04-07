@@ -1,11 +1,12 @@
 #version 320 es
-in highp vec2 pos;
-in highp vec3 color;
-in highp float sides;
+
+in vec2 pos;
+in vec3 color;
+in float sides;
 uniform mat4 MVP;
 
-out highp vec3 fColor;
-out highp float vSides;
+out vec3 fColor;
+out float vSides;
 
 void main()
 {

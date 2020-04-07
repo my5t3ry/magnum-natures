@@ -8,7 +8,6 @@
 #include "sdl/event.hpp"
 #include "sdl/window.hpp"
 
-#include "opengl/geoshader.hpp"
 #include "opengl/spritebatch.hpp"
 
 #endif

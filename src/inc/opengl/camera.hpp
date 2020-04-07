@@ -1,6 +1,8 @@
 #ifndef camera_h
 #define camera_h
 
+#include <glm/ext/matrix_clip_space.inl>
+#include <glm/gtx/transform.hpp>
 #include "constants.hpp"
 
 struct Camera {

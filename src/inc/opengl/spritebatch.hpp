@@ -1,12 +1,12 @@
 #ifndef spritebatch_h
 #define spritebatch_h
 
+#include <Magnum/GL/Buffer.h>
 #include <iostream>
 #include <vector>
 #include <GL/glew.h>
-#include <Magnum/GL/Buffer.h>
+#include <shaders/geoshader/GeoShader.h>
 
-#include "inc/shaders//geoshader/GeoShader.h"
 #include "dna.hpp"
 
 class RenderBatch {
@@ -20,7 +20,7 @@ public:
 
 class SpriteBatch {
 public:
-    explicit SpriteBatch(Magnum::GeoShader theshader);
+    SpriteBatch();
 
     void init();
 
@@ -33,17 +33,20 @@ public:
     void renderBatch();
 
 private:
+    Magnum::GeoShader shader;
     void createRenderBatches();
 
     void createVertexArray();
 
-    Magnum::GL::Buffer buffer;
+    Magnum::GL::Buffer posPuffer;
 
     std::vector<std::pair<Rectangle, DNA::Visuals> *> _gfxPtr;
     std::vector<std::pair<Rectangle, DNA::Visuals>> _gfx;
     std::vector<RenderBatch> _renderBatches;
 
-    Magnum::GeoShader shader;
+    std::vector<glm::vec2> pos;
+    std::vector<glm::vec3> color;
+    std::vector<float> sides;
 };
 
 #endif

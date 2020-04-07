@@ -1,10 +1,11 @@
 #version 320 es
+
 layout(points) in;
 layout(triangle_strip, max_vertices = 2000) out;
 
-in highp vec3 vColor[];
-in highp float vSides[];
-out highp vec3 fColor;
+in vec3 vColor[];
+in float vSides[];
+out vec3 fColor;
 
 const float PI = 3.1415926;
 

@@ -7,6 +7,15 @@ endif ()
 
 corrade_add_resource(NATURES_RESOURCES resources.conf)
 
+add_executable(embedfile inc/opengl/embed.cpp)
+
+add_custom_command(
+        OUTPUT  ${PROJECT_BINARY_DIR}/inc/vertex_shader.h
+        COMMAND embedfile vertex_shader inc/opengl/shaders/theshader.vert ${CMAKE_BINARY_DIR}/vertex_shader.h
+        DEPENDS inc/opengl/shaders/theshader.vert
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+
+
 include_directories(inc)
 find_package(Corrade REQUIRED Main Utility)
 find_package(Magnum REQUIRED
@@ -14,30 +23,29 @@ find_package(Magnum REQUIRED
         MeshTools
         Primitives
         SceneGraph
+        SceneGraph
         Shaders
         Sdl2Application)
 find_package(MagnumIntegration REQUIRED ImGui)
 
 link_libraries(Corrade::Main
-        Magnum::Application
+        Magnum::Sdl2Application
+        Magnum::Shaders
         Magnum::GL
+        Magnum::SceneGraph
         Magnum::Magnum
         Magnum::MeshTools
         Magnum::Primitives
         Magnum::SceneGraph
         Corrade::Utility
-        Magnum::Shaders
-        m
-        GL
-        GLEW
-        MagnumIntegration::ImGui)
-FILE(COPY ${PROJECT_SOURCE_DIR}/inc DESTINATION ${CMAKE_BINARY_DIR}/Debug/bin/)
+        MagnumIntegration::ImGui
+        GLEW)
+FILE(COPY ${PROJECT_SOURCE_DIR}/inc DESTINATION ${PROJECT_BINARY_DIR}})
 
 add_executable(natures
         inc/natures.hpp
         GeoShader.cpp
         list.cpp
-        geoshader.cpp
         event.cpp
         dna.cpp
         spritebatch.cpp

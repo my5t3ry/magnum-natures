@@ -32,50 +32,32 @@
 
 
 #include "constants.hpp"
-#include "transform.hpp"
+#include "vert.h"
+#include "frag.h"
+#include "genom.h"
+#include "constants.hpp"
 #include <Magnum/GL/AbstractShaderProgram.h>
 #include <Magnum/GL/Shader.h>
+#include <glm/vec3.hpp>
+#include <glm/vec2.hpp>
 
 namespace Magnum {
 
     class GeoShader : public GL::AbstractShaderProgram {
+    public:
+        GeoShader();
+
     public:
         enum ColorMode {
             UniformDiffuseColor = 0,
             RampColorById
         };
 
-        explicit GeoShader();
-
-        GeoShader &setNumParticles(Int numParticles);
-
-        GeoShader &setParticleRadius(Float radius);
-
-        GeoShader &setColorMode(Int colorMode);
-
-        GeoShader &setColor(const Color3 &color);
-
-        GeoShader &setViewport(const Vector2i &viewport);
-
-        GeoShader &setViewProjectionMatrix(const Matrix3 &matrix);
-
-        GeoShader &setScreenHeight(Int height);
-
-        GeoShader &setDomainHeight(Int height);
+        typedef Magnum::GL::Attribute<0, glm::vec2> pos;
+        typedef Magnum::GL::Attribute<1, glm::vec3> color;
+        typedef Magnum::GL::Attribute<2, float> sides;
 
     private:
-        Int _uNumParticles,
-                _uParticleRadius,
-                _uColorMode,
-                _uColor,
-                _uViewProjectionMatrix,
-                _uScreenHeight,
-                _uDomainHeight;
-
-       ;
-        GLuint m_uniforms[NUM_UNIFORMS];
-
-        GL::Shader CreateShader(const std::string &fileName, Magnum::GL::Shader::Type shaderType);
     };
 
 }
