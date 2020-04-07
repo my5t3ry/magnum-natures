@@ -18,6 +18,7 @@
 #include <Magnum/Timeline.h>
 #include <Magnum/Trade/MeshData.h>
 #include <natures.hpp>
+#include <Magnum/SceneGraph/Camera.h>
 
 
 namespace Magnum {
@@ -63,6 +64,7 @@ namespace Magnum {
         bool _bMouseInteraction = true;
         List L;
 
+        /* Camera helpers */
 
 
 
@@ -77,16 +79,23 @@ Magnum::Natures::Natures(const Arguments &arguments) : Platform::Application{arg
                                                                                              "Magnum ImGui Example")
                                                                                      .setWindowFlags(
                                                                                              Configuration::WindowFlag::Resizable)} {
-    _imGuiContext = ImGuiIntegration::Context(Vector2{WINDOW_X,WINDOW_Y} / dpiScaling(),
+    _imGuiContext = ImGuiIntegration::Context(Vector2{windowSize()},
                                               windowSize(), framebufferSize());
-
-    L = List();
-    setMinimalLoopPeriod(16);
-    _timeline.start();
     GL::Renderer::setBlendEquation(GL::Renderer::BlendEquation::Add,
                                    GL::Renderer::BlendEquation::Add);
     GL::Renderer::setBlendFunction(GL::Renderer::BlendFunction::SourceAlpha,
                                    GL::Renderer::BlendFunction::OneMinusSourceAlpha);
+    L = List();
+    setMinimalLoopPeriod(16);
+//    GL::defaultFramebuffer.setViewport({{},{WINDOW_X,WINDOW_Y}});
+//    /* Relayout ImGui */
+//    _imGuiContext.relayout({WINDOW_X,WINDOW_Y}, {WINDOW_X,WINDOW_Y},
+//                           {WINDOW_X,WINDOW_Y});
+
+    /* Recompute the camera's projection matrix */
+//    _camera->setViewport({WINDOW_X,WINDOW_Y});
+    _timeline.start();
+
 
 #if !defined(MAGNUM_TARGET_WEBGL) && !defined(CORRADE_TARGET_ANDROID)
     /* Have some sane speed, please */
@@ -95,7 +104,9 @@ Magnum::Natures::Natures(const Arguments &arguments) : Platform::Application{arg
 }
 
 void Magnum::Natures::drawEvent() {
-    GL::defaultFramebuffer.clear(GL::FramebufferClear::Color | GL::FramebufferClear::Depth);
+    GL::defaultFramebuffer.clear(GL::FramebufferClear::Color);
+
+    _imGuiContext.newFrame();
 
     /* Enable text input, if needed */
     if (ImGui::GetIO().WantTextInput && !isTextInputActive())
@@ -103,65 +114,54 @@ void Magnum::Natures::drawEvent() {
     else if (!ImGui::GetIO().WantTextInput && isTextInputActive())
         stopTextInput();
 
+
     /* Draw objects */
-    {
-        if (!_pausedSimulation) {
-            _imGuiContext.newFrame();
-
-            Magnum::GL::defaultFramebuffer.clear(GL::FramebufferClear::Color | GL::FramebufferClear::Depth);
-            L.Remove();;
-            L.Behavior();
-            L.Place();
-            spriteBatch.begin();
 
 
-            for (auto &organism : L.organisms)
-                spriteBatch.draw(organism.getRectangle(), organism.getVisuals());
+    L.Remove();;
+    L.Behavior();
+    L.Place();
+    spriteBatch.begin();
 
-            spriteBatch.end();
-            spriteBatch.renderBatch();
-//                        shader.update()
+    for (auto &organism : L.organisms)
+        spriteBatch.draw(organism.getRectangle(), organism.getVisuals());
+
+    spriteBatch.end();
+    spriteBatch.renderBatch();
 
 
-            /* Menu for parameters */
-            if (_showMenu) showMenu();
+    /* Menu for parameters */
+    if (_showMenu) showMenu();
 
-            /* Update application cursor */
-            _imGuiContext.updateApplicationCursor(*this);
+    /* Update application cursor */
+    _imGuiContext.updateApplicationCursor(*this);
 
-            /* Render ImGui window */
-            {
-                GL::Renderer::enable(GL::Renderer::Feature::Blending);
-                GL::Renderer::disable(GL::Renderer::Feature::FaceCulling);
-                GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
-                GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
+    /* Set appropriate states. If you only draw ImGui, it is sufficient to
+       just enable blending and scissor test in the constructor. */
+    GL::Renderer::enable(GL::Renderer::Feature::Blending);
+    GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
+    GL::Renderer::disable(GL::Renderer::Feature::FaceCulling);
+    GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
 
-                _imGuiContext.drawFrame();
+    _imGuiContext.drawFrame();
 
-                GL::Renderer::disable(GL::Renderer::Feature::ScissorTest);
-                GL::Renderer::enable(GL::Renderer::Feature::DepthTest);
-                GL::Renderer::enable(GL::Renderer::Feature::FaceCulling);
-                GL::Renderer::disable(GL::Renderer::Feature::Blending);
-            }
-        }
-        swapBuffers();
+    /* Reset state. Only needed if you want to draw something else with
+       different state after. */
+    GL::Renderer::enable(GL::Renderer::Feature::DepthTest);
+    GL::Renderer::enable(GL::Renderer::Feature::FaceCulling);
+    GL::Renderer::disable(GL::Renderer::Feature::ScissorTest);
+    GL::Renderer::disable(GL::Renderer::Feature::Blending);
+    ImGui::Render();
+    swapBuffers();
+    redraw();
 
-        /* Run next frame immediately */
-        redraw();
-    }
 }
 
 
 void Magnum::Natures::viewportEvent(ViewportEvent &event) {
-    /* Resize the main framebuffer */
-    GL::defaultFramebuffer.setViewport({{}, event.framebufferSize()});
 
-    /* Relayout ImGui */
-    _imGuiContext.relayout(Vector2{event.windowSize()} / event.dpiScaling(), event.windowSize(),
-                           event.framebufferSize());
-
-    /* Recompute the camera's projection matrix */
-//        _camera->setViewport(event.framebufferSize());
+    _imGuiContext.relayout(Vector2{event.windowSize()} / event.dpiScaling(),
+                           event.windowSize(), event.framebufferSize());
 }
 
 void Magnum::Natures::keyPressEvent(KeyEvent &event) {

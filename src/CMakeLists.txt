@@ -23,7 +23,6 @@ find_package(Magnum REQUIRED
         MeshTools
         Primitives
         SceneGraph
-        SceneGraph
         Shaders
         Sdl2Application)
 find_package(MagnumIntegration REQUIRED ImGui)

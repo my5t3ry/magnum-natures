@@ -8,12 +8,6 @@
 
 #include "dna.hpp"
 
-struct bufferArrays {
-    std::vector<glm::vec2> pos;
-    std::vector<glm::vec3> color;
-    std::vector<float> sides;
-};
-
 class RenderBatch {
 public:
     RenderBatch(GLuint Offset, GLuint NumVertices) : offset(Offset),
@@ -46,7 +40,12 @@ private:
     std::vector<std::pair<Rectangle, DNA::Visuals>> _gfx;
     std::vector<RenderBatch> _renderBatches;
 
-    bufferArrays createVertexArray();
+    std::vector<glm::vec2> pos;
+    std::vector<glm::vec3> color;
+    std::vector<float> sides;
+    void createVertexArray();
+
+    void createRenderBatches();
 };
 
 #endif

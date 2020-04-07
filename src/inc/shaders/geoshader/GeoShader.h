@@ -46,13 +46,15 @@ class GeoShader : public Magnum::GL::AbstractShaderProgram {
 public:
     GeoShader();
 
-    typedef Magnum::GL::Attribute<0, Magnum::Math::Vector2<float>> pos;
-    typedef Magnum::GL::Attribute<1, Magnum::Math::Vector3<float >> color;
+    typedef Magnum::GL::Attribute<0, Magnum::Vector2> pos;
+    typedef Magnum::GL::Attribute<1, Magnum::Vector3> color;
     typedef Magnum::GL::Attribute<2, float> sides;
 
 private:
     using Magnum::GL::AbstractShaderProgram::drawTransformFeedback;
     using Magnum::GL::AbstractShaderProgram::dispatchCompute;
+
+    GeoShader &setProjectionMatrix(const Magnum::Matrix4 &matrix);
 };
 
 

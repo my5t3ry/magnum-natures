@@ -2,10 +2,9 @@
 #include "opengl/spritebatch.hpp"
 
 
-
 SpriteBatch::SpriteBatch() {
-
     shader = GeoShader();
+
 }
 
 void SpriteBatch::begin() {
@@ -31,42 +30,93 @@ void SpriteBatch::draw(Rectangle r, DNA::Visuals v) {
 
 void SpriteBatch::renderBatch() {
     Magnum::GL::Mesh mesh;
-    const bufferArrays &arrays = createVertexArray();
+    createRenderBatches();
+    createVertexArray();
     // Bind our VAO. This sets up the opengl state we need, including the
     // vertex attribute pointers and it binds the VBO
 
-    //glBindTexture(GL_TEXTURE_2D, _renderBatches[i].texture);
+//    Magnum::Vector2 bindPos[pos.size()]{pos};
+//    Magnum::Vector3 color[color.size()]{color};
+//    glBindTexture(GL_TEXTURE_2D, _renderBatches[i].texture);
     Magnum::GL::Buffer posBuffer;
-    posBuffer.setData(arrays.pos, Magnum::GL::BufferUsage::StaticDraw);
+    posBuffer.setData(pos, Magnum::GL::BufferUsage::StaticDraw);
     Magnum::GL::Buffer colorBuffer;
-    colorBuffer.setData(arrays.color, Magnum::GL::BufferUsage::StaticDraw);
+    colorBuffer.setData(color, Magnum::GL::BufferUsage::StaticDraw);
     Magnum::GL::Buffer sidesBuffer;
-    sidesBuffer.setData(arrays.sides, Magnum::GL::BufferUsage::StaticDraw);
+    sidesBuffer.setData(sides, Magnum::GL::BufferUsage::StaticDraw);
     mesh.setPrimitive(Magnum::GL::MeshPrimitive::Points)
             .addVertexBuffer(posBuffer, 0, GeoShader::pos{})
-            .setCount(arrays.pos.size());
+            .setCount(pos.size());
     mesh.setPrimitive(Magnum::GL::MeshPrimitive::Points)
             .addVertexBuffer(posBuffer, 0, GeoShader::pos{})
-            .setCount(arrays.color.size());
+            .setCount(color.size());
     mesh.setPrimitive(Magnum::GL::MeshPrimitive::Points)
             .addVertexBuffer(posBuffer, 0, GeoShader::color{})
-            .setCount(arrays.color.size());
+            .setCount(color.size());
     shader.draw(mesh);
 }
 
-bufferArrays SpriteBatch::createVertexArray() {
+void SpriteBatch::createRenderBatches() {
+    // This will store all the vertices that we need to upload
+    std::vector<float> vertices;
+    // Resize the buffer to the exact size we need so we can treat
+    // it like an array
+    vertices.resize(_gfxPtr.size() * 6);
+
+    if (_gfxPtr.empty()) {
+        return;
+    }
+
+    int offset = 0; // current offset
+    int cv = 0; // current vertex
+
+    //Add the first batch
+    _renderBatches.emplace_back(offset, 6);
+    vertices[cv++] = _gfxPtr[0]->first.x;
+    vertices[cv++] = _gfxPtr[0]->first.y;
+    vertices[cv++] = _gfxPtr[0]->second.red;
+    vertices[cv++] = _gfxPtr[0]->second.green;
+    vertices[cv++] = _gfxPtr[0]->second.blue;
+    vertices[cv++] = SIDES;
+
+    offset += 6;
+
+    //Add all the rest of the glyphs
+    //std::cout << "ptr size = " <<  _gfxPtr.size() << std::endl;
+    for (int cg = 1; cg < _gfxPtr.size(); cg++) {
+        // Check if this glyph can be part of the current batch
+        //if (_gfxPtr[cg]->texture != _gfxPtr[cg - 1]->texture) {
+        // Make a new batch
+        //    _renderBatches.emplace_back(offset, 6);
+        //} else {
+        // If its part of the current batch, just increase numVertices
+        _renderBatches.back().numVertices += 6;
+        //}
+        vertices[cv++] = _gfxPtr[cg]->first.x;
+        vertices[cv++] = _gfxPtr[cg]->first.y;
+        vertices[cv++] = _gfxPtr[cg]->second.red;
+        vertices[cv++] = _gfxPtr[cg]->second.green;
+        vertices[cv++] = _gfxPtr[cg]->second.blue;
+        vertices[cv++] = SIDES;
+
+        offset += 6;
+    }
+}
+
+void SpriteBatch::createVertexArray() {
     // This will store all the vertices that we need to upload
     // Resize the buffer to the exact size we need so we can treat
     // it like an array
-    std::vector<glm::vec2> pos;
-    std::vector<glm::vec3> color;
-    std::vector<float> sides;
+    pos.empty();
+    color.empty();
+    sides.empty();
+
     pos.resize(_gfxPtr.size() * sizeof(glm::vec2));
     color.resize(_gfxPtr.size() * sizeof(glm::vec2));
     sides.resize(_gfxPtr.size() * sizeof(float));
 
     if (_gfxPtr.empty()) {
-        return {pos,color,sides};
+        return;
     }
 
 
@@ -78,5 +128,5 @@ bufferArrays SpriteBatch::createVertexArray() {
         color[cg++] = {_gfxPtr[0]->second.red, _gfxPtr[0]->second.green, _gfxPtr[0]->second.blue};
         sides[cg++] = SIDES;
     }
-    return  {pos,color,sides};
+
 }

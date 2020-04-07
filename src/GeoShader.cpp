@@ -34,8 +34,7 @@
 #include <Magnum/GL/Shader.h>
 #include <Magnum/GL/Version.h>
 
-GeoShader::GeoShader() {
-
+GeoShader::GeoShader() :AbstractShaderProgram(){
 
     Magnum::GL::Shader vert{Magnum::GL::Version::GLES320, Magnum::GL::Shader::Type::Vertex};
     Magnum::GL::Shader geo{Magnum::GL::Version::GLES320, Magnum::GL::Shader::Type::Geometry};
@@ -49,7 +48,11 @@ GeoShader::GeoShader() {
     CORRADE_INTERNAL_ASSERT_OUTPUT(Magnum::GL::Shader::compile({frag}));
     attachShaders({vert, geo, frag});
     CORRADE_INTERNAL_ASSERT(link());
+//    glBindBuffer(this->id());
+    glUseProgram(this->id());
 }
+
+
 
 
 
