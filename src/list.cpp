@@ -44,7 +44,7 @@ void List::Behavior() {
         if (it->getType() == PLANT_TYPE or it->getType() == CORPSE_TYPE)
             it->grow();
         else {
-            std::vector < Organism * > near = getNear(*it);
+            std::vector<Organism *> near = getNear(*it);
             it->giveNearMe(near);
             it->Behavior();
 
@@ -65,7 +65,7 @@ void List::Place() {
 }
 
 std::vector<Organism *> List::getNear(Organism c) {
-    std::vector < Organism * > near;
+    std::vector<Organism *> near;
     near = tree.retrieve(near, c.getRectangle());
 
     for (std::vector<Organism *>::iterator it = near.begin(); it != near.end(); it++)

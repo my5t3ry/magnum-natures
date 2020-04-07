@@ -22,7 +22,7 @@ DNA::DNA(int t) {
     } else if (t == CARNIVORE_TYPE) {
         type = CARNIVORE_TYPE;
         eatType = HERBAVORE_TYPE;
-        maxHealth = CREATURE_MAX_HEALTH*2;
+        maxHealth = CREATURE_MAX_HEALTH * 2;
         bestSense = CREATURE_BEST_SENSE * 2;
         bite = CREATURE_BITE * 4;
         expectedPregnancyTime = CREATURE_EXP_PREG_TIME;

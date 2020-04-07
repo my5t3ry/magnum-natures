@@ -8,21 +8,23 @@
 
 #include "constants.hpp"
 
-class Window
-{
-	public:
-		Window(int width, int height, const std::string& title);
-                ~Window();
+class Window {
+public:
+    Window(int width, int height, const std::string &title);
 
-                void Clear();
-                void swapBuffers();
-                bool getClosed(){return closed;};
+    ~Window();
+
+    void Clear();
+
+    void swapBuffers();
+
+    bool getClosed() { return closed; };
 
 
-	private:
-		SDL_Window* main;
-                SDL_GLContext glContext;
-                bool closed;
+private:
+    SDL_Window *main;
+    SDL_GLContext glContext;
+    bool closed;
 };
 
 #endif

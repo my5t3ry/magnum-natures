@@ -10,28 +10,33 @@
 #include "sdl/window.hpp"
 
 class Quadtree {
-        public:
-                Quadtree();
-                Quadtree(int pLevel, Rectangle pBounds);
+public:
+    Quadtree();
 
-                void clear();
-                void insert(Organism* iter);
+    Quadtree(int pLevel, Rectangle pBounds);
 
-                std::vector<Organism*> retrieve(std::vector<Organism*> returnObject, Rectangle obj);
-                std::vector<Organism*> objects;
+    void clear();
 
-                Quadtree* nodes;
+    void insert(Organism *iter);
 
-                std::vector<Rectangle> Draw();
+    std::vector<Organism *> retrieve(std::vector<Organism *> returnObject, Rectangle obj);
 
-        private:
-                void    split();
-                int     getIndex(Rectangle object);
-                int     level;
-                bool    isNull = true;
+    std::vector<Organism *> objects;
 
-                Rectangle rect;
-                Rectangle bounds;
+    Quadtree *nodes;
+
+    std::vector<Rectangle> Draw();
+
+private:
+    void split();
+
+    int getIndex(Rectangle object);
+
+    int level;
+    bool isNull = true;
+
+    Rectangle rect;
+    Rectangle bounds;
 };
 
 #endif

@@ -6,35 +6,35 @@
 #include "constants.hpp"
 #include "functions.hpp"
 
-class DNA
-{  
-        public:
-                DNA(){};
-                DNA(int t);
+class DNA {
+public:
+    DNA() {};
 
-                DNA combine(DNA D);
+    DNA(int t);
 
-                int     type;
-                int     eatType;
-                int     maxHealth;
-                int     bestSense;
-                int     bite;
-                int     expectedPregnancyTime;
-                int     expectedAge;
-                int     growAmount;
-                int     hungryAmount;
-                int     starveAmount;
+    DNA combine(DNA D);
 
-                float   reach;
-                float   speed;
-                float   mutationPercent;
-                float   mutationChance;
+    int type;
+    int eatType;
+    int maxHealth;
+    int bestSense;
+    int bite;
+    int expectedPregnancyTime;
+    int expectedAge;
+    int growAmount;
+    int hungryAmount;
+    int starveAmount;
 
-                struct  Visuals{
-                        float  red;
-                        float  green;
-                        float  blue;
-                } appearance;
+    float reach;
+    float speed;
+    float mutationPercent;
+    float mutationChance;
+
+    struct Visuals {
+        float red;
+        float green;
+        float blue;
+    } appearance;
 };
 
 #endif

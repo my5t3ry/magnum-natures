@@ -3,25 +3,29 @@
 
 #include <SDL2/SDL.h>
 
-class Timer
-{
-        public:
-                Timer();
+class Timer {
+public:
+    Timer();
 
-                void    Start();
-                void    Stop();
-                void    Pause();
-                void    unPause();
+    void Start();
 
-                int     getTicks();
-                bool    getStarted(){return started;};
-                bool    getPaused(){return paused;};
+    void Stop();
 
-        private:
-                int     startTicks;
-                int     pausedTicks;
-                bool    paused;
-                bool    started;
+    void Pause();
+
+    void unPause();
+
+    int getTicks();
+
+    bool getStarted() { return started; };
+
+    bool getPaused() { return paused; };
+
+private:
+    int startTicks;
+    int pausedTicks;
+    bool paused;
+    bool started;
 };
 
 #endif
