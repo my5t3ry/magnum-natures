@@ -5,6 +5,7 @@
 
 #include <string>
 #include <GL/glew.h>
+#include <Magnum/GL/Shader.h>
 
 #include "constants.hpp"
 #include "transform.hpp"
@@ -12,6 +13,9 @@
 class GeoShader {
 public:
     GeoShader(const std::string &fileName);
+    typedef Magnum::GL::Attribute<0, glm::vec2> pos;
+    typedef Magnum::GL::Attribute<1, glm::vec3> color;
+    typedef Magnum::GL::Attribute<2, float> sides;
 
     void Bind();
 
@@ -26,9 +30,9 @@ private:
 
     void CheckShaderError(GLuint shader, GLuint flag, bool isProgram, const std::string &errorMessage);
 
-    GLuint CreateShader(const std::string &text, GLenum shaderType);
+    Magnum::GL::Shader CreateShader(const std::string &text, Magnum::GL::Shader::Type shaderType);
 
-    GLuint m_shaders[NUM_SHADERS];
+    Magnum::GL::Shader m_shaders[NUM_SHADERS];
     GLuint m_uniforms[NUM_UNIFORMS];
 };
 

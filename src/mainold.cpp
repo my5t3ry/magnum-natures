@@ -1,6 +1,15 @@
 #define GLM_ENABLE_EXPERIMENTAL
 
-#include "main.hpp"
+#include <imgui.h>
+
+#include <Corrade/Containers/Pointer.h>
+#include <Corrade/Utility/StlMath.h>
+#include <Magnum/GL/DefaultFramebuffer.h>
+#include <Magnum/GL/Renderer.h>
+#include <Magnum/GL/PixelFormat.h>
+#include <Magnum/GL/Context.h>
+#include <Magnum/GL/Version.h>
+#include "natures.hpp"
 
 int main() {
     srand(time(NULL));
@@ -17,6 +26,7 @@ int main() {
 
     _spriteBatch.init();
     shader.Bind();
+
 
     int uniModel = glGetUniformLocation(shader.m_program, "MVP");
     glUniformMatrix4fv(uniModel, 1, false, &transform.GetMVP(camera)[0][0]);

@@ -1,5 +1,7 @@
 #ifndef constants_h
 #define constants_h
+#include <Corrade/Containers/ReferenceStl.h>
+#include <string>
 
 // General
 const int HERBAVORES = 200;

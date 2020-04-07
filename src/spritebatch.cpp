@@ -1,6 +1,9 @@
+#include <natures.hpp>
 #include "opengl/spritebatch.hpp"
 
-SpriteBatch::SpriteBatch(GeoShader theshader) : _vbo(0), _vao(0), shader(theshader) {}
+SpriteBatch::SpriteBatch(Magnum::GeoShader theshader) {
+    shader = theshader;
+}
 
 void SpriteBatch::init() {
     createVertexArray();
@@ -85,15 +88,7 @@ void SpriteBatch::createRenderBatches() {
 
         offset += 6;
     }
-
-    // Bind our VBO
-    glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-    // Orphan the buffer (for speed)
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), nullptr, GL_DYNAMIC_DRAW);
-    // Upload the data
-    glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(float), vertices.data());
-    // Unbind the VBO
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+ok ok
 }
 
 void SpriteBatch::createVertexArray() {

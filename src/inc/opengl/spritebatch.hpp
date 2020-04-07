@@ -4,8 +4,9 @@
 #include <iostream>
 #include <vector>
 #include <GL/glew.h>
+#include <Magnum/GL/Buffer.h>
 
-#include "geoshader.hpp"
+#include "inc/shaders//geoshader/GeoShader.h"
 #include "dna.hpp"
 
 class RenderBatch {
@@ -19,7 +20,7 @@ public:
 
 class SpriteBatch {
 public:
-    SpriteBatch(GeoShader theshader);
+    explicit SpriteBatch(Magnum::GeoShader theshader);
 
     void init();
 
@@ -36,14 +37,13 @@ private:
 
     void createVertexArray();
 
-    GLuint _vbo;
-    GLuint _vao;
+    Magnum::GL::Buffer buffer;
 
     std::vector<std::pair<Rectangle, DNA::Visuals> *> _gfxPtr;
     std::vector<std::pair<Rectangle, DNA::Visuals>> _gfx;
     std::vector<RenderBatch> _renderBatches;
 
-    GeoShader shader;
+    Magnum::GeoShader shader;
 };
 
 #endif

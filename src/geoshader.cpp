@@ -1,12 +1,14 @@
 #include "opengl/geoshader.hpp"
 #include <iostream>
 #include <fstream>
+#include <Magnum/GL/Shader.h>
+#include <Magnum/GL/Version.h>
 
 GeoShader::GeoShader(const std::string &fileName) {
-    m_program = glCreateProgram();
+   //m_program = glCreateProgram();
 
-    m_shaders[0] = CreateShader(LoadShader(fileName + ".vert"), GL_VERTEX_SHADER);
-    m_shaders[1] = CreateShader(LoadShader(fileName + ".frag"), GL_FRAGMENT_SHADER);
+    m_shaders[0] = CreateShader(fileName + ".vert", Magnum::GL::Shader::Type::Vertex);
+    m_shaders[1] = CreateShader(LoadShader(), GL_FRAGMENT_SHADER);
     m_shaders[2] = CreateShader(LoadShader(fileName + ".geom"), GL_GEOMETRY_SHADER);
 
     int i;
@@ -42,17 +44,11 @@ void GeoShader::Update(const Transform &transform, const Camera &camera) {
     glUniformMatrix4fv(m_uniforms[0], 1, GL_FALSE, &MVP[0][0]);
 }
 
-GLuint GeoShader::CreateShader(const std::string &text, GLenum shaderType) {
-    GLuint shader = glCreateShader(shaderType);
+Magnum::GL::Shader GeoShader::CreateShader(const std::string &fileName, Magnum::GL::Shader::Type shaderType) {
+    Magnum::GL::Shader shader{Magnum::GL::Version::GL460, shaderType};
+    shader.addFile(fileName);
 
-    const GLchar *shaderSource[1];
-    GLint shaderSourceLengths[1];
 
-    shaderSource[0] = text.c_str();
-    shaderSourceLengths[0] = text.length();
-
-    glShaderSource(shader, 1, shaderSource, shaderSourceLengths);
-    glCompileShader(shader);
 
     return shader;
 }

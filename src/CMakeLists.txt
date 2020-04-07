@@ -1,10 +1,14 @@
 cmake_minimum_required(VERSION 3.15)
-project(natures)
+project(natures CXX)
 
-set(CMAKE_CXX_STANDARD 11)
+if (PROJECT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+    set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/../modules/" ${CMAKE_MODULE_PATH})
+endif ()
+
+corrade_add_resource(NATURES_RESOURCES resources.conf)
 
 include_directories(inc)
-find_package(Corrade REQUIRED Main)
+find_package(Corrade REQUIRED Main Utility)
 find_package(Magnum REQUIRED
         GL
         MeshTools
@@ -21,15 +25,17 @@ link_libraries(Corrade::Main
         Magnum::MeshTools
         Magnum::Primitives
         Magnum::SceneGraph
+        Corrade::Utility
         Magnum::Shaders
-        pthread
         m
+        GL
         GLEW
         MagnumIntegration::ImGui)
 FILE(COPY ${PROJECT_SOURCE_DIR}/inc DESTINATION ${CMAKE_BINARY_DIR}/Debug/bin/)
 
-
 add_executable(natures
+        inc/natures.hpp
+        GeoShader.cpp
         list.cpp
         geoshader.cpp
         event.cpp
@@ -39,4 +45,5 @@ add_executable(natures
         quadtree.cpp
         timer.cpp
         window.cpp
-        main.cpp)
+        natures.cpp
+        ${NATURES_RESOURCES})
