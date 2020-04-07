@@ -23,9 +23,10 @@ link_libraries(Corrade::Main
         Magnum::SceneGraph
         Magnum::Shaders
         pthread
+        MagnumIntegration::ImGui
         m
         GLEW
-        MagnumIntegration::ImGui)
+        )
 FILE(COPY ${PROJECT_SOURCE_DIR}/inc DESTINATION ${CMAKE_BINARY_DIR}/Debug/bin/)
 
 
