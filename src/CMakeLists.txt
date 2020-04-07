@@ -4,8 +4,28 @@ project(natures)
 set(CMAKE_CXX_STANDARD 11)
 
 include_directories(inc)
+find_package(Corrade REQUIRED Main)
+find_package(Magnum REQUIRED
+        GL
+        MeshTools
+        Primitives
+        SceneGraph
+        Shaders
+        Sdl2Application)
+find_package(MagnumIntegration REQUIRED ImGui)
 
-link_libraries(m GL GLEW SDL2 pthread)
+link_libraries(Corrade::Main
+        Magnum::Application
+        Magnum::GL
+        Magnum::Magnum
+        Magnum::MeshTools
+        Magnum::Primitives
+        Magnum::SceneGraph
+        Magnum::Shaders
+        pthread
+        m
+        GLEW
+        MagnumIntegration::ImGui)
 FILE(COPY ${PROJECT_SOURCE_DIR}/inc DESTINATION ${CMAKE_BINARY_DIR}/Debug/bin/)
 
 
