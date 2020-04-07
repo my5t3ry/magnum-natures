@@ -33,8 +33,8 @@ const int PLANT_MAX_HEALTH = 300;
 const int PLANT_GROW_AMOUNT = 4;
 
 // Corpse Stats
-const int CORPSE_MAX_HEALTH = 300;
-const int CORPSE_DECAY_AMOUNT = -2;
+const int CORPSE_MAX_HEALTH = 350;
+const int CORPSE_DECAY_AMOUNT = -1;
 
 // Opengl
 const int NUM_SHADERS = 3;
