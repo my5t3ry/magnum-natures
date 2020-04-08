@@ -4,21 +4,15 @@
 #define MAGNUM_TARGET_GLES3
 
 #include <Corrade/Containers/Pointer.h>
-#include <Magnum/GL/DefaultFramebuffer.h>
-#include <Magnum/GL/Renderer.h>
-#include <Magnum/GL/PixelFormat.h>
-#include <Magnum/GL/Context.h>
-#include <Magnum/GL/Version.h>
-#include <Magnum/Math/Color.h>
-#include <Magnum/Math/FunctionsBatch.h>
 #include <Magnum/ImGuiIntegration/Context.hpp>
 #include <Magnum/Platform/Sdl2Application.h>
-
 
 #include <Magnum/Timeline.h>
 #include <Magnum/Trade/MeshData.h>
 #include <natures.hpp>
 #include <Magnum/SceneGraph/Camera.h>
+#include <Magnum/GL/Renderer.h>
+#include <Magnum/GL/DefaultFramebuffer.h>
 
 
 namespace Magnum {
@@ -105,6 +99,7 @@ Magnum::Natures::Natures(const Arguments &arguments) : Platform::Application{arg
 
 void Magnum::Natures::drawEvent() {
     GL::defaultFramebuffer.clear(GL::FramebufferClear::Color);
+    GL::defaultFramebuffer.bind();
 
     _imGuiContext.newFrame();
 

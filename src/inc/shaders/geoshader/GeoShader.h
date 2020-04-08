@@ -36,10 +36,9 @@
 #include "frag.h"
 #include "genom.h"
 #include "constants.hpp"
-#include <Magnum/GL/AbstractShaderProgram.h>
-#include <Magnum/GL/Shader.h>
 #include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
+#include <Magnum/GL/AbstractShaderProgram.h>
 
 
 class GeoShader : public Magnum::GL::AbstractShaderProgram {

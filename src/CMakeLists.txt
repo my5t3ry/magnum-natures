@@ -24,6 +24,7 @@ find_package(Magnum REQUIRED
         Primitives
         SceneGraph
         Shaders
+        Shaders
         Sdl2Application)
 find_package(MagnumIntegration REQUIRED ImGui)
 

@@ -40,12 +40,17 @@ private:
     std::vector<std::pair<Rectangle, DNA::Visuals>> _gfx;
     std::vector<RenderBatch> _renderBatches;
 
-    std::vector<glm::vec2> pos;
-    std::vector<glm::vec3> color;
+    std::vector<Magnum::Vector2> pos;
+    std::vector<Magnum::Vector3> color;
     std::vector<float> sides;
     void createVertexArray();
 
     void createRenderBatches();
+    Magnum::GL::Buffer posBuffer;
+    Magnum::GL::Buffer colorBuffer;
+    Magnum::GL::Buffer sidesBuffer;
+    Magnum::GL::Mesh mesh;
+
 };
 
 #endif

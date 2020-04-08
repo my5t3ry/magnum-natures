@@ -2,6 +2,7 @@
 #define constants_h
 #include <Corrade/Containers/ReferenceStl.h>
 #include <string>
+#include <Magnum/Magnum.h>
 
 // General
 const int HERBAVORES = 200;

@@ -1,9 +1,21 @@
 #include <Magnum/GL/Mesh.h>
 #include "opengl/spritebatch.hpp"
+#include <Magnum/Math/Vector3.h>
+#include <Magnum/Math/Vector2.h>
 
 
 SpriteBatch::SpriteBatch() {
     shader = GeoShader();
+    mesh.setPrimitive(Magnum::GL::MeshPrimitive::Points)
+            .addVertexBuffer(posBuffer, 0, GeoShader::pos{})
+            .setCount(pos.size());
+    mesh.setPrimitive(Magnum::GL::MeshPrimitive::Points)
+            .addVertexBuffer(colorBuffer, 1, GeoShader::color {})
+            .setCount(color.size());
+    mesh.setPrimitive(Magnum::GL::MeshPrimitive::Points)
+            .addVertexBuffer(sidesBuffer, 2, GeoShader::sides{})
+            .setCount(color.size());
+    glUseProgram(shader.id());
 
 }
 
@@ -29,7 +41,6 @@ void SpriteBatch::draw(Rectangle r, DNA::Visuals v) {
 }
 
 void SpriteBatch::renderBatch() {
-    Magnum::GL::Mesh mesh;
     createRenderBatches();
     createVertexArray();
     // Bind our VAO. This sets up the opengl state we need, including the
@@ -38,21 +49,10 @@ void SpriteBatch::renderBatch() {
 //    Magnum::Vector2 bindPos[pos.size()]{pos};
 //    Magnum::Vector3 color[color.size()]{color};
 //    glBindTexture(GL_TEXTURE_2D, _renderBatches[i].texture);
-    Magnum::GL::Buffer posBuffer;
-    posBuffer.setData(pos, Magnum::GL::BufferUsage::StaticDraw);
-    Magnum::GL::Buffer colorBuffer;
-    colorBuffer.setData(color, Magnum::GL::BufferUsage::StaticDraw);
-    Magnum::GL::Buffer sidesBuffer;
-    sidesBuffer.setData(sides, Magnum::GL::BufferUsage::StaticDraw);
-    mesh.setPrimitive(Magnum::GL::MeshPrimitive::Points)
-            .addVertexBuffer(posBuffer, 0, GeoShader::pos{})
-            .setCount(pos.size());
-    mesh.setPrimitive(Magnum::GL::MeshPrimitive::Points)
-            .addVertexBuffer(posBuffer, 0, GeoShader::pos{})
-            .setCount(color.size());
-    mesh.setPrimitive(Magnum::GL::MeshPrimitive::Points)
-            .addVertexBuffer(posBuffer, 0, GeoShader::color{})
-            .setCount(color.size());
+
+    colorBuffer.setData(color, Magnum::GL::BufferUsage::DynamicDraw);
+    sidesBuffer.setData(sides, Magnum::GL::BufferUsage::DynamicDraw);
+    posBuffer.setData(pos, Magnum::GL::BufferUsage::DynamicDraw);
     shader.draw(mesh);
 }
 
@@ -119,13 +119,13 @@ void SpriteBatch::createVertexArray() {
         return;
     }
 
-
-    //Add all the rest of the glyphs
     //std::cout << "ptr size = " <<  _gfxPtr.size() << std::endl;
     for (int cg = 1; cg < _gfxPtr.size(); cg++) {
         // If its part of the current batcdh, just increase numVertices
-        pos[cg++] = {_gfxPtr[0]->first.x, _gfxPtr[0]->first.y};
-        color[cg++] = {_gfxPtr[0]->second.red, _gfxPtr[0]->second.green, _gfxPtr[0]->second.blue};
+        Magnum::Vector2 a{_gfxPtr[0]->first.x, _gfxPtr[0]->first.y};
+        Magnum::Vector3 b{_gfxPtr[0]->second.red, _gfxPtr[0]->second.green, _gfxPtr[0]->second.blue};
+        pos[cg++] = a;
+        color[cg++] = b;
         sides[cg++] = SIDES;
     }
 
