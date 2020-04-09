@@ -5,6 +5,8 @@
 #include <vector>
 #include <shaders/geoshader/GeoShader.h>
 #include <Magnum/GL/Buffer.h>
+#include <Magnum/SceneGraph/SceneGraph.h>
+#include <Corrade/Containers/Pointer.h>
 
 #include "dna.hpp"
 
@@ -20,21 +22,15 @@ public:
 class SpriteBatch {
 public:
     SpriteBatch();
-
-
     void begin();
-
     void end();
-
     void draw(Rectangle r, DNA::Visuals v);
-
-    void renderBatch();
-
+    SpriteBatch& drawShader(Corrade::Containers::Pointer<Magnum::SceneGraph::Camera2D> &camera, Magnum::Int screenHeight,
+               Magnum::Int projectionHeight);
+    void init();
 
 private:
-    GeoShader shader;
-
-    Magnum::GL::Buffer posPuffer;
+    Corrade::Containers::Pointer<GeoShader> shader;
 
     std::vector<std::pair<Rectangle, DNA::Visuals> *> _gfxPtr;
     std::vector<std::pair<Rectangle, DNA::Visuals>> _gfx;
@@ -43,13 +39,15 @@ private:
     std::vector<Magnum::Vector2> pos;
     std::vector<Magnum::Vector3> color;
     std::vector<float> sides;
+
     void createVertexArray();
 
     void createRenderBatches();
-    Magnum::GL::Buffer posBuffer;
-    Magnum::GL::Buffer colorBuffer;
-    Magnum::GL::Buffer sidesBuffer;
-    Magnum::GL::Mesh mesh;
+
+    Corrade::Containers::Pointer<Magnum::GL::Buffer> posBuffer;
+    Corrade::Containers::Pointer<Magnum::GL::Buffer> colorBuffer;
+    Corrade::Containers::Pointer<Magnum::GL::Buffer> sidesBuffer;
+    Corrade::Containers::Pointer<Magnum::GL::Mesh> mesh;
 
 };
 

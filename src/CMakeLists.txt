@@ -24,7 +24,6 @@ find_package(Magnum REQUIRED
         Primitives
         SceneGraph
         Shaders
-        Shaders
         Sdl2Application)
 find_package(MagnumIntegration REQUIRED ImGui)
 
@@ -44,6 +43,8 @@ FILE(COPY ${PROJECT_SOURCE_DIR}/inc DESTINATION ${PROJECT_BINARY_DIR}})
 
 add_executable(natures
         inc/natures.hpp
+        inc/FlatShadeObject2D.h
+        inc/WireframeObject2D.h
         GeoShader.cpp
         list.cpp
         event.cpp
@@ -52,6 +53,5 @@ add_executable(natures
         organism.cpp
         quadtree.cpp
         timer.cpp
-        window.cpp
         natures.cpp
         ${NATURES_RESOURCES})

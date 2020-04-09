@@ -3,16 +3,27 @@
 
 #define MAGNUM_TARGET_GLES3
 
-#include <Corrade/Containers/Pointer.h>
-#include <Magnum/ImGuiIntegration/Context.hpp>
-#include <Magnum/Platform/Sdl2Application.h>
 
+#include <Corrade/Containers/Pointer.h>
+#include <Corrade/Utility/StlMath.h>
+#include <Magnum/GL/DefaultFramebuffer.h>
+#include <Magnum/GL/Renderer.h>
+#include <Magnum/GL/PixelFormat.h>
+#include <Magnum/GL/Context.h>
+#include <Magnum/GL/Version.h>
+#include <Magnum/Math/Color.h>
+#include <Magnum/Math/FunctionsBatch.h>
+#include <Magnum/ImGuiIntegration/Context.hpp>
+#include <Magnum/MeshTools/Compile.h>
+#include <Magnum/Platform/Sdl2Application.h>
+#include <Magnum/Primitives/Circle.h>
+#include <Magnum/SceneGraph/Camera.h>
+#include <Magnum/SceneGraph/Drawable.h>
+#include <Magnum/SceneGraph/MatrixTransformation3D.h>
+#include <Magnum/SceneGraph/Scene.h>
 #include <Magnum/Timeline.h>
 #include <Magnum/Trade/MeshData.h>
 #include <natures.hpp>
-#include <Magnum/SceneGraph/Camera.h>
-#include <Magnum/GL/Renderer.h>
-#include <Magnum/GL/DefaultFramebuffer.h>
 
 
 namespace Magnum {
@@ -49,8 +60,6 @@ namespace Magnum {
         bool _showMenu = true;
         ImGuiIntegration::Context _imGuiContext{NoCreate};
         bool _pausedSimulation = false;
-
-
         Timeline _timeline;
         Vector2 _lastMousePressedWorldPos;
         Float _mouseInteractionRadius = 5.0f;
@@ -58,36 +67,93 @@ namespace Magnum {
         bool _bMouseInteraction = true;
         List L;
 
+        Containers::Pointer<Scene2D> _scene;
+        Containers::Pointer<SceneGraph::DrawableGroup2D> _drawableGroup;
+
+        /* Camera helpers */
+        Containers::Pointer<Object2D> _objCamera;
+        Containers::Pointer<SceneGraph::Camera2D> _camera;
+
         /* Camera helpers */
 
-
-
-        const std::string fileName = "./inc/opengl/shaders/theshader";
-        SpriteBatch spriteBatch = SpriteBatch();;
+//        SpriteBatch spriteBatch;
+        SpriteBatch spriteBatch;
     };
 
 }
 
-Magnum::Natures::Natures(const Arguments &arguments) : Platform::Application{arguments,
-                                                                             Configuration{}.setTitle(
-                                                                                             "Magnum ImGui Example")
-                                                                                     .setWindowFlags(
-                                                                                             Configuration::WindowFlag::Resizable)} {
-    _imGuiContext = ImGuiIntegration::Context(Vector2{windowSize()},
-                                              windowSize(), framebufferSize());
-    GL::Renderer::setBlendEquation(GL::Renderer::BlendEquation::Add,
-                                   GL::Renderer::BlendEquation::Add);
-    GL::Renderer::setBlendFunction(GL::Renderer::BlendFunction::SourceAlpha,
-                                   GL::Renderer::BlendFunction::OneMinusSourceAlpha);
-    L = List();
-    setMinimalLoopPeriod(16);
-//    GL::defaultFramebuffer.setViewport({{},{WINDOW_X,WINDOW_Y}});
-//    /* Relayout ImGui */
-//    _imGuiContext.relayout({WINDOW_X,WINDOW_Y}, {WINDOW_X,WINDOW_Y},
-//                           {WINDOW_X,WINDOW_Y});
+namespace {
+    constexpr Magnum::Int RadiusCircleBoundary = 45; /* radius of the boundary circle */
+/* Viewport will display this window */
+    const Magnum::Vector2i DomainDisplaySize = {WINDOW_Y, WINDOW_X};
 
-    /* Recompute the camera's projection matrix */
-//    _camera->setViewport({WINDOW_X,WINDOW_Y});
+    Magnum::Vector2 gridCenter() {
+        return {WINDOW_Y / 2, WINDOW_X / 2};
+    }
+
+}
+
+Magnum::Natures::Natures(const Arguments &arguments) : Platform::Application{arguments, NoCreate} {
+    {
+        const Vector2 dpiScaling = this->dpiScaling({});
+        Configuration conf;
+        conf.setTitle("Magnum 2D Fluid Simulation Example")
+                .setSize(conf.size(), dpiScaling)
+                .setWindowFlags(Configuration::WindowFlag::Resizable);
+        GLConfiguration glConf;
+        glConf.setSampleCount(dpiScaling.max() < 2.0f ? 8 : 2);
+        if (!tryCreate(conf, glConf)) {
+            create(conf, glConf.setSampleCount(0));
+        }
+    }
+    {
+        ImGui::CreateContext();
+        ImGui::StyleColorsDark();
+
+        ImFontConfig fontConfig;
+        fontConfig.FontDataOwnedByAtlas = false;
+        const Vector2 size = Vector2{windowSize()} / dpiScaling();
+        Utility::Resource rs{"data"};
+        Containers::ArrayView<const char> font = rs.getRaw("SourceSansPro-Regular.ttf");
+        ImGui::GetIO().Fonts->AddFontFromMemoryTTF(
+                const_cast<char *>(font.data()), Int(font.size()),
+                16.0f * framebufferSize().x() / size.x(), &fontConfig);
+
+        _imGuiContext = ImGuiIntegration::Context{*ImGui::GetCurrentContext(),
+                                                  Vector2{windowSize()} / dpiScaling(), windowSize(),
+                                                  framebufferSize()};
+
+        /* Setup proper blending to be used by ImGui */
+        GL::Renderer::setBlendFunction(
+                GL::Renderer::BlendFunction::SourceAlpha,
+                GL::Renderer::BlendFunction::OneMinusSourceAlpha);
+    }
+
+    /* Setup scene objects and camera */
+    {
+        /* Setup scene objects */
+        L = List();
+        spriteBatch.init();
+
+
+        _scene.emplace();
+        _drawableGroup.emplace();
+
+        /* Configure camera */
+        _objCamera.emplace(_scene.get());
+        _objCamera->setTransformation(Matrix3::translation(gridCenter()));
+
+        _camera.emplace(*_objCamera);
+        _camera->setAspectRatioPolicy(SceneGraph::AspectRatioPolicy::Extend)
+                .setProjectionMatrix(Matrix3::projection(Vector2{DomainDisplaySize}))
+                .setViewport(GL::defaultFramebuffer.viewport().size());
+    }
+    GL::Renderer::enable(GL::Renderer::Feature::DepthTest);
+    GL::Renderer::enable(GL::Renderer::Feature::ProgramPointSize);
+
+    /* Start the timer, loop at 60 Hz max */
+    setSwapInterval(1);
+    setMinimalLoopPeriod(16);
     _timeline.start();
 
 
@@ -99,18 +165,15 @@ Magnum::Natures::Natures(const Arguments &arguments) : Platform::Application{arg
 
 void Magnum::Natures::drawEvent() {
     GL::defaultFramebuffer.clear(GL::FramebufferClear::Color);
-    GL::defaultFramebuffer.bind();
 
     _imGuiContext.newFrame();
 
+    /* Enable text input, if needed */
     /* Enable text input, if needed */
     if (ImGui::GetIO().WantTextInput && !isTextInputActive())
         startTextInput();
     else if (!ImGui::GetIO().WantTextInput && isTextInputActive())
         stopTextInput();
-
-
-    /* Draw objects */
 
 
     L.Remove();;
@@ -122,8 +185,10 @@ void Magnum::Natures::drawEvent() {
         spriteBatch.draw(organism.getRectangle(), organism.getVisuals());
 
     spriteBatch.end();
-    spriteBatch.renderBatch();
+//    spriteBatch.renderBatch();
+    spriteBatch.drawShader(_camera, GL::defaultFramebuffer.viewport().size().y(), DomainDisplaySize.y());
 
+    _camera->draw(*_drawableGroup);
 
     /* Menu for parameters */
     if (_showMenu) showMenu();
@@ -146,7 +211,6 @@ void Magnum::Natures::drawEvent() {
     GL::Renderer::enable(GL::Renderer::Feature::FaceCulling);
     GL::Renderer::disable(GL::Renderer::Feature::ScissorTest);
     GL::Renderer::disable(GL::Renderer::Feature::Blending);
-    ImGui::Render();
     swapBuffers();
     redraw();
 
@@ -154,9 +218,14 @@ void Magnum::Natures::drawEvent() {
 
 
 void Magnum::Natures::viewportEvent(ViewportEvent &event) {
+    GL::defaultFramebuffer.setViewport({{}, event.framebufferSize()});
 
-    _imGuiContext.relayout(Vector2{event.windowSize()} / event.dpiScaling(),
-                           event.windowSize(), event.framebufferSize());
+    /* Relayout ImGui */
+    _imGuiContext.relayout(Vector2{event.windowSize()} / event.dpiScaling(), event.windowSize(),
+                           event.framebufferSize());
+
+    /* Recompute the camera's projection matrix */
+    _camera->setViewport(event.framebufferSize());
 }
 
 void Magnum::Natures::keyPressEvent(KeyEvent &event) {

@@ -39,6 +39,8 @@
 #include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
 #include <Magnum/GL/AbstractShaderProgram.h>
+#include <Magnum/Magnum.h>
+#include <Magnum/Types.h>
 
 
 class GeoShader : public Magnum::GL::AbstractShaderProgram {
@@ -48,12 +50,15 @@ public:
     typedef Magnum::GL::Attribute<0, Magnum::Vector2> pos;
     typedef Magnum::GL::Attribute<1, Magnum::Vector3> color;
     typedef Magnum::GL::Attribute<2, float> sides;
+    GeoShader &setViewProjectionMatrix(const Magnum::Matrix3 &matrix);
 
 private:
+    Magnum::Int _mvp;
     using Magnum::GL::AbstractShaderProgram::drawTransformFeedback;
     using Magnum::GL::AbstractShaderProgram::dispatchCompute;
 
-    GeoShader &setProjectionMatrix(const Magnum::Matrix4 &matrix);
+//    GeoShader &setProjectionMatrix(const Magnum::Matrix4 &matrix);
+
 };
 
 

@@ -1,3 +1,5 @@
+#ifndef Magnum_Examples_DrawableObjects_WireframeObject2D_h
+#define Magnum_Examples_DrawableObjects_WireframeObject2D_h
 /*
     This file is part of Magnum.
 
@@ -28,42 +30,48 @@
     CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include "inc/shaders/geoshader/GeoShader.h"
+#include <Corrade/Containers/Pointer.h>
+#include <Magnum/GL/Mesh.h>
+#include <Magnum/SceneGraph/Scene.h>
+#include <Magnum/SceneGraph/MatrixTransformation2D.h>
+#include <Magnum/Shaders/Flat.h>
 
-#include <Corrade/Containers/Reference.h>
-#include <Magnum/GL/Version.h>
-#include <Magnum/Magnum.h>
-#include <Magnum/Types.h>
-#include <Magnum/GL/Shader.h>
-#include <Magnum/GL/DefaultFramebuffer.h>
-#include <Magnum/Math/Matrix3.h>
 
-GeoShader::GeoShader() : Magnum::GL::AbstractShaderProgram(){
+namespace Magnum {
 
-    Magnum::GL::Shader vert{Magnum::GL::Version::GLES320, Magnum::GL::Shader::Type::Vertex};
-    Magnum::GL::Shader geo{Magnum::GL::Version::GLES320, Magnum::GL::Shader::Type::Geometry};
-    Magnum::GL::Shader frag{Magnum::GL::Version::GLES320, Magnum::GL::Shader::Type::Fragment};
-    vert.addSource(vertShader);
-    geo.addSource(genomShader);
-    frag.addSource(fragShader);
+using Scene2D = SceneGraph::Scene<SceneGraph::MatrixTransformation2D>;
 
-    CORRADE_INTERNAL_ASSERT_OUTPUT(Magnum::GL::Shader::compile({vert}));
-    CORRADE_INTERNAL_ASSERT_OUTPUT(Magnum::GL::Shader::compile({geo}));
-    CORRADE_INTERNAL_ASSERT_OUTPUT(Magnum::GL::Shader::compile({frag}));
-    attachShaders({vert, geo, frag});
-    CORRADE_INTERNAL_ASSERT(link());
-    _mvp = uniformLocation("MVP");
+class WireframeObject2D {
+    public:
+        explicit WireframeObject2D(Scene2D* const scene, SceneGraph::DrawableGroup2D* const drawableGroup, GL::Mesh&& mesh) :
+            _mesh(std::move(mesh)) {
+            _obj2D.reset(new Object2D{ scene });
+            _flatShader = Shaders::Flat2D{};
+            _drawableObj.reset(new FlatShadeObject2D{ *_obj2D, _flatShader, Color3{ 1.0f }, _mesh, drawableGroup });
+        }
+
+        WireframeObject2D& setColor(const Color3& color) {
+            _drawableObj->setColor(color);
+            return *this;
+        }
+
+        WireframeObject2D& setTransformation(const Matrix3& matrix) {
+            _obj2D->setTransformation(matrix);
+            return *this;
+        }
+
+        WireframeObject2D& setEnabled(bool bEnabled) {
+            _drawableObj->setEnabled(bEnabled);
+            return *this;
+        }
+
+    protected:
+        GL::Mesh _mesh{NoCreate};
+        Shaders::Flat2D _flatShader{NoCreate};
+        Containers::Pointer<Object2D> _obj2D;
+        Containers::Pointer<FlatShadeObject2D> _drawableObj;
+};
 
 }
 
-GeoShader& GeoShader::setViewProjectionMatrix(const Magnum::Matrix3& matrix) {
-    setUniform(_mvp, matrix);
-    return *this;
-}
-
-
-
-
-
-
-
+#endif

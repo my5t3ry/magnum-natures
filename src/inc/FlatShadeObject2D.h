@@ -1,3 +1,5 @@
+#ifndef Magnum_Examples_DrawableObjects_FlatShadeObject2D_h
+#define Magnum_Examples_DrawableObjects_FlatShadeObject2D_h
 /*
     This file is part of Magnum.
 
@@ -28,42 +30,47 @@
     CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include "inc/shaders/geoshader/GeoShader.h"
+#include <Magnum/GL/Mesh.h>
+#include <Magnum/Math/Color.h>
+#include <Magnum/Shaders/Flat.h>
+#include <Magnum/SceneGraph/Camera.h>
+#include <Magnum/SceneGraph/Drawable.h>
+#include <Magnum/SceneGraph/MatrixTransformation2D.h>
 
-#include <Corrade/Containers/Reference.h>
-#include <Magnum/GL/Version.h>
-#include <Magnum/Magnum.h>
-#include <Magnum/Types.h>
-#include <Magnum/GL/Shader.h>
-#include <Magnum/GL/DefaultFramebuffer.h>
-#include <Magnum/Math/Matrix3.h>
+namespace Magnum {
 
-GeoShader::GeoShader() : Magnum::GL::AbstractShaderProgram(){
+using Object2D = SceneGraph::Object<SceneGraph::MatrixTransformation2D>;
 
-    Magnum::GL::Shader vert{Magnum::GL::Version::GLES320, Magnum::GL::Shader::Type::Vertex};
-    Magnum::GL::Shader geo{Magnum::GL::Version::GLES320, Magnum::GL::Shader::Type::Geometry};
-    Magnum::GL::Shader frag{Magnum::GL::Version::GLES320, Magnum::GL::Shader::Type::Fragment};
-    vert.addSource(vertShader);
-    geo.addSource(genomShader);
-    frag.addSource(fragShader);
+class FlatShadeObject2D: public SceneGraph::Drawable2D {
+    public:
+        explicit FlatShadeObject2D(Object2D& object, Shaders::Flat2D& shader, const Color3& color, GL::Mesh& mesh, SceneGraph::DrawableGroup2D* const drawables):
+            SceneGraph::Drawable2D{object, drawables}, _shader(shader), _color(color), _mesh(mesh) {}
 
-    CORRADE_INTERNAL_ASSERT_OUTPUT(Magnum::GL::Shader::compile({vert}));
-    CORRADE_INTERNAL_ASSERT_OUTPUT(Magnum::GL::Shader::compile({geo}));
-    CORRADE_INTERNAL_ASSERT_OUTPUT(Magnum::GL::Shader::compile({frag}));
-    attachShaders({vert, geo, frag});
-    CORRADE_INTERNAL_ASSERT(link());
-    _mvp = uniformLocation("MVP");
+        void draw(const Matrix3& transformation, SceneGraph::Camera2D& camera) override {
+            if(!_bEnabled) return;
+
+            _shader
+                .setColor(_color)
+                .setTransformationProjectionMatrix(camera.projectionMatrix()*transformation)
+                .draw(_mesh);
+        }
+
+        FlatShadeObject2D& setColor(const Color3& color) {
+            _color = color;
+            return *this;
+        }
+        FlatShadeObject2D& setEnabled(bool bEnabled) {
+            _bEnabled = bEnabled;
+            return *this;
+        }
+
+    private:
+        Shaders::Flat2D& _shader;
+        Color3 _color;
+        GL::Mesh& _mesh;
+        bool _bEnabled = true;
+};
 
 }
 
-GeoShader& GeoShader::setViewProjectionMatrix(const Magnum::Matrix3& matrix) {
-    setUniform(_mvp, matrix);
-    return *this;
-}
-
-
-
-
-
-
-
+#endif

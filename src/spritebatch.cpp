@@ -2,28 +2,37 @@
 #include "opengl/spritebatch.hpp"
 #include <Magnum/Math/Vector3.h>
 #include <Magnum/Math/Vector2.h>
+#include <Magnum/SceneGraph/Scene.h>
+#include <Magnum/SceneGraph/Camera.h>
+#include <Magnum/SceneGraph/MatrixTransformation2D.h>
+
+using Scene2D = Magnum::SceneGraph::Scene<Magnum::SceneGraph::MatrixTransformation2D>;
 
 
-SpriteBatch::SpriteBatch() {
-    shader = GeoShader();
-    mesh.setPrimitive(Magnum::GL::MeshPrimitive::Points)
-            .addVertexBuffer(posBuffer, 0, GeoShader::pos{})
-            .setCount(pos.size());
-    mesh.setPrimitive(Magnum::GL::MeshPrimitive::Points)
-            .addVertexBuffer(colorBuffer, 1, GeoShader::color {})
-            .setCount(color.size());
-    mesh.setPrimitive(Magnum::GL::MeshPrimitive::Points)
-            .addVertexBuffer(sidesBuffer, 2, GeoShader::sides{})
-            .setCount(color.size());
-    glUseProgram(shader.id());
+SpriteBatch::SpriteBatch() = default;
 
+
+void SpriteBatch::init() {
+    shader.emplace();
+    mesh.emplace();
+    posBuffer.emplace();
+    colorBuffer.emplace();
+    sidesBuffer.emplace();
+    (*mesh)
+            .setPrimitive(Magnum::GL::MeshPrimitive::Points)
+            .addVertexBuffer((*posBuffer), 0, GeoShader::pos{})
+            .setCount((*posBuffer).size());
+    (*mesh).setPrimitive(Magnum::GL::MeshPrimitive::Points)
+            .addVertexBuffer((*colorBuffer), 1, GeoShader::color{})
+            .setCount((*colorBuffer).size());
+    (*mesh).setPrimitive(Magnum::GL::MeshPrimitive::Points)
+            .addVertexBuffer((*sidesBuffer), 2, GeoShader::sides{})
+            .setCount((*sidesBuffer).size());
 }
 
+
 void SpriteBatch::begin() {
-    glEnable(GL_PROGRAM_POINT_SIZE);
     _renderBatches.clear();
-    // Makes _glpyhs.size() == 0, however it does not free internal memory.
-    // So when we later call emplace_back it doesn't need to internally call new.
     _gfx.clear();
 }
 
@@ -40,20 +49,23 @@ void SpriteBatch::draw(Rectangle r, DNA::Visuals v) {
     _gfx.emplace_back(std::make_pair(r, v));
 }
 
-void SpriteBatch::renderBatch() {
+SpriteBatch &
+SpriteBatch::drawShader(Corrade::Containers::Pointer<Magnum::SceneGraph::Camera2D> &camera, Magnum::Int screenHeight,
+                        Magnum::Int projectionHeight) {
     createRenderBatches();
     createVertexArray();
-    // Bind our VAO. This sets up the opengl state we need, including the
-    // vertex attribute pointers and it binds the VBO
+    (*colorBuffer)
+            .setData(color, Magnum::GL::BufferUsage::StaticDraw);
+    (*sidesBuffer)
+            .setData(sides, Magnum::GL::BufferUsage::StaticDraw);
+    (*posBuffer)
+            .setData(pos, Magnum::GL::BufferUsage::DynamicDraw);
+    (*shader)
+            .setViewProjectionMatrix(camera->projectionMatrix() * camera->cameraMatrix())
+            .draw((*mesh));
+//        .draw(mesh);
+    return *this;
 
-//    Magnum::Vector2 bindPos[pos.size()]{pos};
-//    Magnum::Vector3 color[color.size()]{color};
-//    glBindTexture(GL_TEXTURE_2D, _renderBatches[i].texture);
-
-    colorBuffer.setData(color, Magnum::GL::BufferUsage::DynamicDraw);
-    sidesBuffer.setData(sides, Magnum::GL::BufferUsage::DynamicDraw);
-    posBuffer.setData(pos, Magnum::GL::BufferUsage::DynamicDraw);
-    shader.draw(mesh);
 }
 
 void SpriteBatch::createRenderBatches() {
