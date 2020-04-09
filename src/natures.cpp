@@ -85,20 +85,21 @@ namespace Magnum {
 namespace {
     constexpr Magnum::Int RadiusCircleBoundary = 45; /* radius of the boundary circle */
 /* Viewport will display this window */
-    const Magnum::Vector2i DomainDisplaySize = {WINDOW_Y, WINDOW_X};
+    const Magnum::Vector2i DomainDisplaySize = {WINDOW_X, WINDOW_Y};
 
     Magnum::Vector2 gridCenter() {
-        return {WINDOW_Y / 2, WINDOW_X / 2};
+        return {WINDOW_X / 2, WINDOW_Y / 2};
     }
 
 }
+
 
 Magnum::Natures::Natures(const Arguments &arguments) : Platform::Application{arguments, NoCreate} {
     {
         const Vector2 dpiScaling = this->dpiScaling({});
         Configuration conf;
         conf.setTitle("Magnum 2D Fluid Simulation Example")
-                .setSize(conf.size(), dpiScaling)
+                .setSize(DomainDisplaySize, {1.0f,1.0f})
                 .setWindowFlags(Configuration::WindowFlag::Resizable);
         GLConfiguration glConf;
         glConf.setSampleCount(dpiScaling.max() < 2.0f ? 8 : 2);
@@ -112,7 +113,7 @@ Magnum::Natures::Natures(const Arguments &arguments) : Platform::Application{arg
 
         ImFontConfig fontConfig;
         fontConfig.FontDataOwnedByAtlas = false;
-        const Vector2 size = Vector2{windowSize()} / dpiScaling();
+        const Vector2 size = Vector2{DomainDisplaySize} / dpiScaling();
         Utility::Resource rs{"data"};
         Containers::ArrayView<const char> font = rs.getRaw("SourceSansPro-Regular.ttf");
         ImGui::GetIO().Fonts->AddFontFromMemoryTTF(
@@ -120,7 +121,7 @@ Magnum::Natures::Natures(const Arguments &arguments) : Platform::Application{arg
                 16.0f * framebufferSize().x() / size.x(), &fontConfig);
 
         _imGuiContext = ImGuiIntegration::Context{*ImGui::GetCurrentContext(),
-                                                  Vector2{windowSize()} / dpiScaling(), windowSize(),
+                                                  Vector2{DomainDisplaySize} / dpiScaling(), windowSize(),
                                                   framebufferSize()};
 
         /* Setup proper blending to be used by ImGui */
@@ -134,10 +135,9 @@ Magnum::Natures::Natures(const Arguments &arguments) : Platform::Application{arg
         /* Setup scene objects */
         L = List();
         spriteBatch.init();
-
+        _drawableGroup.emplace();
 
         _scene.emplace();
-        _drawableGroup.emplace();
 
         /* Configure camera */
         _objCamera.emplace(_scene.get());
@@ -164,7 +164,7 @@ Magnum::Natures::Natures(const Arguments &arguments) : Platform::Application{arg
 }
 
 void Magnum::Natures::drawEvent() {
-    GL::defaultFramebuffer.clear(GL::FramebufferClear::Color);
+    GL::defaultFramebuffer.clear(GL::FramebufferClear::Color | GL::FramebufferClear::Depth);
 
     _imGuiContext.newFrame();
 
@@ -180,14 +180,11 @@ void Magnum::Natures::drawEvent() {
     L.Behavior();
     L.Place();
     spriteBatch.begin();
-
     for (auto &organism : L.organisms)
         spriteBatch.draw(organism.getRectangle(), organism.getVisuals());
-
     spriteBatch.end();
 //    spriteBatch.renderBatch();
     spriteBatch.drawShader(_camera, GL::defaultFramebuffer.viewport().size().y(), DomainDisplaySize.y());
-
     _camera->draw(*_drawableGroup);
 
     /* Menu for parameters */
