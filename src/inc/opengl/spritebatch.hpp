@@ -7,8 +7,17 @@
 #include <Magnum/GL/Buffer.h>
 #include <Magnum/SceneGraph/SceneGraph.h>
 #include <Corrade/Containers/Pointer.h>
+#include <Magnum/Math/Vector3.h>
 
 #include "dna.hpp"
+#include "opengl/camera.hpp"
+
+struct OrganismVertex {
+    Magnum::Vector2 pos;
+    Magnum::Vector3 color;
+    float sides;
+};
+
 
 class RenderBatch {
 public:
@@ -25,9 +34,8 @@ public:
     void begin();
     void end();
     void draw(Rectangle r, DNA::Visuals v);
-    SpriteBatch& drawShader(Corrade::Containers::Pointer<Magnum::SceneGraph::Camera2D> &camera, Magnum::Int screenHeight,
-               Magnum::Int projectionHeight);
-    void init();
+    SpriteBatch& drawShader();
+    void init(Camera camera);
 
 private:
     Corrade::Containers::Pointer<GeoShader> shader;
@@ -36,18 +44,17 @@ private:
     std::vector<std::pair<Rectangle, DNA::Visuals>> _gfx;
     std::vector<RenderBatch> _renderBatches;
 
-    std::vector<Magnum::Vector2> pos;
-    std::vector<Magnum::Vector3> color;
-    std::vector<float> sides;
+    std::vector<OrganismVertex> vertex;
 
     void createVertexArray();
 
-    void createRenderBatches();
 
     Corrade::Containers::Pointer<Magnum::GL::Buffer> posBuffer;
     Corrade::Containers::Pointer<Magnum::GL::Buffer> colorBuffer;
     Corrade::Containers::Pointer<Magnum::GL::Buffer> sidesBuffer;
-    Corrade::Containers::Pointer<Magnum::GL::Mesh> mesh;
+    Corrade::Containers::Pointer<Magnum::GL::Mesh> posMesh;
+    Corrade::Containers::Pointer<Magnum::GL::Mesh> colorMesh;
+    Corrade::Containers::Pointer<Magnum::GL::Mesh> sidesMesh;
 
 };
 

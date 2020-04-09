@@ -3,7 +3,6 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
-#include <Magnum/Math/Matrix4.h>
 
 #include "camera.hpp"
 
@@ -27,11 +26,11 @@ public:
         return posMat * rotMat * scaleMat;
     }
 
-    inline glm::mat4 GetMVP(const Magnum::Matrix4 cameraMatrix) const {
-        Magnum::Matrix4 VP = cameraMatrix;
+    inline glm::mat4 GetMVP(const Camera &camera) const {
+        glm::mat4 VP = camera.GetViewProjection();
         glm::mat4 M = GetModel();
 
-        return VP * MMatrix4({M[0], M[1], M[2], M[3]});
+        return VP * M;
     }
 
     inline glm::vec3 *GetPos() { return &pos; }

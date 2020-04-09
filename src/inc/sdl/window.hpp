@@ -4,7 +4,6 @@
 #include <SDL2/SDL.h>
 #include <string>
 #include <iostream>
-#include <GL/glew.h>
 
 #include "constants.hpp"
 

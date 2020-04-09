@@ -41,23 +41,23 @@
 #include <Magnum/GL/AbstractShaderProgram.h>
 #include <Magnum/Magnum.h>
 #include <Magnum/Types.h>
+#include <opengl/camera.hpp>
 
 
 class GeoShader : public Magnum::GL::AbstractShaderProgram {
 public:
     GeoShader();
 
-    typedef Magnum::GL::Attribute<0, Magnum::Vector2> pos;
-    typedef Magnum::GL::Attribute<1, Magnum::Vector3> color;
-    typedef Magnum::GL::Attribute<2, float> sides;
-    GeoShader &setViewProjectionMatrix(const Magnum::Matrix3 &matrix);
+    typedef Magnum::GL::Attribute<1, Magnum::Vector2> pos;
+    typedef Magnum::GL::Attribute<2, Magnum::Vector3> color;
+    typedef Magnum::GL::Attribute<3, float> sides;
+
+    GeoShader &setViewProjectionMatrix(Camera camera);
 
 private:
     Magnum::Int _mvp;
     using Magnum::GL::AbstractShaderProgram::drawTransformFeedback;
     using Magnum::GL::AbstractShaderProgram::dispatchCompute;
-
-//    GeoShader &setProjectionMatrix(const Magnum::Matrix4 &matrix);
 
 };
 

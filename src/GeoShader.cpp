@@ -37,8 +37,9 @@
 #include <Magnum/GL/Shader.h>
 #include <Magnum/GL/DefaultFramebuffer.h>
 #include <Magnum/Math/Matrix3.h>
+#include <opengl/transform.hpp>
 
-GeoShader::GeoShader() : Magnum::GL::AbstractShaderProgram(){
+GeoShader::GeoShader() : Magnum::GL::AbstractShaderProgram() {
 
     Magnum::GL::Shader vert{Magnum::GL::Version::GLES320, Magnum::GL::Shader::Type::Vertex};
     Magnum::GL::Shader geo{Magnum::GL::Version::GLES320, Magnum::GL::Shader::Type::Geometry};
@@ -47,17 +48,16 @@ GeoShader::GeoShader() : Magnum::GL::AbstractShaderProgram(){
     geo.addSource(genomShader);
     frag.addSource(fragShader);
 
-    CORRADE_INTERNAL_ASSERT_OUTPUT(Magnum::GL::Shader::compile({vert}));
-    CORRADE_INTERNAL_ASSERT_OUTPUT(Magnum::GL::Shader::compile({geo}));
-    CORRADE_INTERNAL_ASSERT_OUTPUT(Magnum::GL::Shader::compile({frag}));
+    CORRADE_INTERNAL_ASSERT_OUTPUT(Magnum::GL::Shader::compile({vert,geo,frag}));
     attachShaders({vert, geo, frag});
+
     CORRADE_INTERNAL_ASSERT(link());
     _mvp = uniformLocation("MVP");
-
 }
 
-GeoShader& GeoShader::setViewProjectionMatrix(const Magnum::Matrix3& matrix) {
-    setUniform(_mvp, matrix);
+GeoShader &GeoShader::setViewProjectionMatrix(Camera camera) {
+    Transform transform;
+    glUniformMatrix4fv(_mvp, 1, false, &transform.GetMVP(camera)[0][0]);
     return *this;
 }
 

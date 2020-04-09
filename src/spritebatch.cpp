@@ -6,27 +6,23 @@
 #include <Magnum/SceneGraph/Camera.h>
 #include <Magnum/SceneGraph/MatrixTransformation2D.h>
 
-using Scene2D = Magnum::SceneGraph::Scene<Magnum::SceneGraph::MatrixTransformation2D>;
-
 
 SpriteBatch::SpriteBatch() = default;
 
 
-void SpriteBatch::init() {
+void SpriteBatch::init(Camera camera) {
     shader.emplace();
-    mesh.emplace();
+    (*shader).setViewProjectionMatrix(camera);
+    posMesh.emplace();
+    colorMesh.emplace();
+    sidesMesh.emplace();
     posBuffer.emplace();
     colorBuffer.emplace();
     sidesBuffer.emplace();
-    (*mesh).setPrimitive(Magnum::GL::MeshPrimitive::Points)
-            .addVertexBuffer((*posBuffer), 0, GeoShader::pos{})
+    (*posBuffer).setData(vertex, Magnum::GL::BufferUsage::DynamicDraw);
+    (*posMesh).setPrimitive(Magnum::GL::MeshPrimitive::Points)
+            .addVertexBuffer((*posBuffer), 0, GeoShader::pos{}, GeoShader::color{}, GeoShader::sides{})
             .setCount((*posBuffer).size());
-    (*mesh).setPrimitive(Magnum::GL::MeshPrimitive::Points)
-            .addVertexBuffer((*colorBuffer), 0, GeoShader::color{})
-            .setCount((*colorBuffer).size());
-    (*mesh).setPrimitive(Magnum::GL::MeshPrimitive::Points)
-            .addVertexBuffer((*sidesBuffer), 0, GeoShader::sides{})
-            .setCount((*sidesBuffer).size());
 }
 
 
@@ -49,19 +45,19 @@ void SpriteBatch::draw(Rectangle r, DNA::Visuals v) {
 }
 
 SpriteBatch &
-SpriteBatch::drawShader(Corrade::Containers::Pointer<Magnum::SceneGraph::Camera2D> &camera, Magnum::Int screenHeight,
-                        Magnum::Int projectionHeight) {
+SpriteBatch::drawShader() {
 //    createRenderBatches();
     createVertexArray();
-    (*colorBuffer)
-            .setData(color, Magnum::GL::BufferUsage::StaticDraw);
-    (*sidesBuffer)
-            .setData(sides, Magnum::GL::BufferUsage::StaticDraw);
+
     (*posBuffer)
-            .setData(pos, Magnum::GL::BufferUsage::StaticDraw);
-    (*shader)
-            .setViewProjectionMatrix(camera->projectionMatrix() * camera->cameraMatrix())
-            .draw((*mesh));
+            .setData(vertex);
+    (*posMesh).setCount(vertex.size());
+
+    (*shader).draw((*posMesh));
+//    (*shader)
+//            .draw((*colorMesh));
+//    (*shader)
+//            .draw((*sidesMesh));
     return *this;
 }
 //
@@ -112,30 +108,23 @@ SpriteBatch::drawShader(Corrade::Containers::Pointer<Magnum::SceneGraph::Camera2
 //    }
 //}
 
+
 void SpriteBatch::createVertexArray() {
     // This will store all the vertices that we need to upload
     // Resize the buffer to the exact size we need so we can treat
     // it like an array
-    pos.empty();
-    color.empty();
-    sides.empty();
 
-    pos.resize(_gfxPtr.size() * sizeof(glm::vec2));
-    color.resize(_gfxPtr.size() * sizeof(glm::vec2));
-    sides.resize(_gfxPtr.size() * sizeof(float));
-
+    vertex.resize(_gfxPtr.size());
     if (_gfxPtr.empty()) {
         return;
     }
 
     //std::cout << "ptr size = " <<  _gfxPtr.size() << std::endl;
-    for (int cg = 1; cg < _gfxPtr.size(); cg++) {
+    for (int cg = 0; cg < _gfxPtr.size(); cg++) {
         // If its part of the current batcdh, just increase numVertices
-        Magnum::Vector2 a{_gfxPtr[0]->first.x, _gfxPtr[0]->first.y};
-        Magnum::Vector3 b{_gfxPtr[0]->second.red, _gfxPtr[0]->second.green, _gfxPtr[0]->second.blue};
-        pos[cg++] = a;
-        color[cg++] = b;
-        sides[cg++] = SIDES;
+        Magnum::Vector2 a{_gfxPtr[cg]->first.x, _gfxPtr[cg]->first.y};
+        Magnum::Vector3 b{_gfxPtr[cg]->second.red, _gfxPtr[cg]->second.green, _gfxPtr[cg]->second.blue};
+        vertex[cg] = {a, b, SIDES};
     }
 
 }

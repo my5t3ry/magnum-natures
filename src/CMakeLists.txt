@@ -17,10 +17,12 @@ corrade_add_resource(NATURES_RESOURCES resources.conf)
 
 
 include_directories(inc)
+find_package(GLFW REQUIRED)
 find_package(Corrade REQUIRED Main Utility)
 find_package(Magnum REQUIRED
         GL
         MeshTools
+        GlxContext
         Primitives
         SceneGraph
         Shaders
@@ -28,9 +30,11 @@ find_package(Magnum REQUIRED
 find_package(MagnumIntegration REQUIRED ImGui)
 
 link_libraries(Corrade::Main
-        Magnum::Sdl2Application
-        Magnum::Shaders
+        GLFW::GLFW
+        Corrade::Main
         Magnum::GL
+        Magnum::Application
+        Magnum::GLContext
         Magnum::SceneGraph
         Magnum::Magnum
         Magnum::MeshTools
@@ -38,13 +42,15 @@ link_libraries(Corrade::Main
         Magnum::SceneGraph
         Corrade::Utility
         MagnumIntegration::ImGui
-        GLEW)
+        )
 FILE(COPY ${PROJECT_SOURCE_DIR}/inc DESTINATION ${PROJECT_BINARY_DIR}})
 
 add_executable(natures
         inc/natures.hpp
         inc/FlatShadeObject2D.h
-        inc/WireframeObject2D.h
+        inc/FlatShadeObject2D.h
+        inc/opengl/camera.hpp
+        inc/opengl/transform.hpp
         GeoShader.cpp
         list.cpp
         event.cpp
@@ -54,4 +60,4 @@ add_executable(natures
         quadtree.cpp
         timer.cpp
         natures.cpp
-        ${NATURES_RESOURCES})
+        window.cpp)
