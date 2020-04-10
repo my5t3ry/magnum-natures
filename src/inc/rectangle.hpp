@@ -9,7 +9,7 @@ public:
         x = x1;
         y = y1;
         w = w1;
-        h1 = h;
+        h = h1;
     };
     float x;
     float y;

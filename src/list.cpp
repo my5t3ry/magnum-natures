@@ -21,7 +21,7 @@ List::List() {
         organisms.push_back(X);
     }
 
-    Rectangle R1 = Rectangle(0, 0, BOUNDS_X * 2, BOUNDS_Y * 2);
+    Rectangle R1 = Rectangle(0, 0, BOUNDS_X*2, BOUNDS_Y*2);
     tree = Quadtree(0, R1);
 }
 

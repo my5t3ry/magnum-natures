@@ -9,8 +9,7 @@ Quadtree::Quadtree(int pLevel, Rectangle pBounds) {
     isNull = false;
     nodes = new Quadtree[4];
     rect.x = pBounds.x * 1.01;
-    rect.y = pBounds.y * 1.05;
-}
+    rect.y = pBounds.y * 1.05;}
 
 void Quadtree::clear() {
     objects.clear();
@@ -86,7 +85,7 @@ void Quadtree::insert(Organism *iter) {
             split();
 
         int index;
-        for (std::vector<Organism *>::iterator it = objects.begin(); it != objects.end(); it++) {
+        for (auto it = objects.begin(); it != objects.end(); it++) {
             index = getIndex((*it)->getRectangle());
             if (index != -1) {
                 nodes[index].insert(*it);
@@ -105,7 +104,6 @@ std::vector<Rectangle> Quadtree::Draw() {
             retdat.insert(retdat.end(), temp.begin(), temp.end());
         }
     }
-
     if (!nodes[0].isNull)
         retdat.emplace_back(nodes[0].rect);
     if (!nodes[1].isNull)
@@ -114,9 +112,7 @@ std::vector<Rectangle> Quadtree::Draw() {
         retdat.emplace_back(nodes[2].rect);
     if (!nodes[3].isNull)
         retdat.emplace_back(nodes[3].rect);
-
     retdat.emplace_back(rect);
-
     return retdat;
 }
 
@@ -125,8 +121,8 @@ std::vector<Organism *> Quadtree::retrieve(std::vector<Organism *> returnObjects
     if (index != -1 && !nodes[0].isNull)
         returnObjects = nodes[index].retrieve(returnObjects, obj);
 
-    for (std::vector<Organism *>::iterator it = objects.begin(); it != objects.end(); it++)
-        returnObjects.emplace_back(*it);
+    for (auto &object : objects)
+        returnObjects.emplace_back(object);
 
     return returnObjects;
 }

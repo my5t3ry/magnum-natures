@@ -16,7 +16,7 @@ int main() {
     glEnable(GL_PROGRAM_POINT_SIZE);
 
     Transform transform;
-    Camera camera(glm::vec3(0, 0, 480), 70.0f, (float) WINDOW_X / (float) WINDOW_Y, 0.31f, 1000.0f);
+    Camera camera(glm::vec3(0, 0, 500), 70.0f, (float) WINDOW_X / (float) WINDOW_Y, 0.31f, 1000.0f);
     GeoShader shader("./inc/opengl/shaders/theshader");
     SpriteBatch _spriteBatch(shader);
 
@@ -115,6 +115,8 @@ int main() {
 
         for (auto &organism : L.organisms)
             _spriteBatch.draw(organism.getRectangle(), organism.getVisuals());
+        for (auto &treeRectrangle : L.tree.Draw())
+            _spriteBatch.draw(treeRectrangle, {0.8f, 0.8f, 0.2f});
 
         _spriteBatch.end();
         _spriteBatch.renderBatch();
