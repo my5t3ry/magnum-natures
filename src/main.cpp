@@ -6,6 +6,7 @@
 #include <imgui.h>
 #include <examples/imgui_impl_opengl3.h>
 #include <examples/imgui_impl_sdl.h>
+#include <opengl/treespritebatch.hpp>
 
 
 int main() {
@@ -13,18 +14,25 @@ int main() {
 
     Window main(WINDOW_X, WINDOW_Y, "natures");
     List L;
-    glEnable(GL_PROGRAM_POINT_SIZE);
 
     Transform transform;
     Camera camera(glm::vec3(0, 0, 500), 70.0f, (float) WINDOW_X / (float) WINDOW_Y, 0.31f, 1000.0f);
-    GeoShader shader("./inc/opengl/shaders/theshader");
+    GeoShader shader("./inc/opengl/shaders/organism/theshader");
     SpriteBatch _spriteBatch(shader);
-
-    _spriteBatch.init();
     shader.Bind();
+    _spriteBatch.init();
 
     int uniModel = glGetUniformLocation(shader.m_program, "MVP");
     glUniformMatrix4fv(uniModel, 1, false, &transform.GetMVP(camera)[0][0]);
+
+    GeoShader treeShader("./inc/opengl/shaders/tree/theshader");
+    TreeSpriteBatch _treeSpriteBatch(treeShader);
+    treeShader.Bind();
+    _treeSpriteBatch.init();
+
+    int treeUniModel = glGetUniformLocation(treeShader.m_program, "MVP");
+    glUniformMatrix4fv(treeUniModel, 1, false, &transform.GetMVP(camera)[0][0]);
+    glEnable(GL_PROGRAM_POINT_SIZE);
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -85,10 +93,8 @@ int main() {
         {
             static float f = 0.0f;
             static int counter = 0;
-
             ImGui::Begin(
                     "evolutions");                          // Create a window called "Hello, world!" and append into it.
-
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate,
                         ImGui::GetIO().Framerate);
             ImGui::Text("Total organisms (%d)", static_cast<int>(L.organisms.size()));
@@ -110,16 +116,9 @@ int main() {
         L.Behavior();
         L.Place();
 
-        shader.Bind();
-        _spriteBatch.begin();
-
-        for (auto &organism : L.organisms)
-            _spriteBatch.draw(organism.getRectangle(), organism.getVisuals());
-        for (auto &treeRectrangle : L.tree.Draw())
-            _spriteBatch.draw(treeRectrangle, {0.8f, 0.8f, 0.2f});
-
-        _spriteBatch.end();
-        _spriteBatch.renderBatch();
+//        treeShader.Bind();
+        _spriteBatch.render(L.organisms);
+//        _treeSpriteBatch.render(L.tree.Draw());
 //                        shader.update()
 // Render imgui
         ImGui::Render();

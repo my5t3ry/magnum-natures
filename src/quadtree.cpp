@@ -9,7 +9,8 @@ Quadtree::Quadtree(int pLevel, Rectangle pBounds) {
     isNull = false;
     nodes = new Quadtree[4];
     rect.x = pBounds.x * 1.01;
-    rect.y = pBounds.y * 1.05;}
+    rect.y = pBounds.y * 1.05;
+}
 
 void Quadtree::clear() {
     objects.clear();
@@ -77,13 +78,10 @@ void Quadtree::insert(Organism *iter) {
             return;
         }
     }
-
     objects.emplace_back(iter);
-
     if (objects.size() > MAX_OBJECTS && level < MAX_LEVELS) {
         if (nodes[0].isNull)
             split();
-
         int index;
         for (auto it = objects.begin(); it != objects.end(); it++) {
             index = getIndex((*it)->getRectangle());

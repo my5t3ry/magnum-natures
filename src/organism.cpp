@@ -8,7 +8,6 @@ Organism::Organism(Rectangle r, DNA d) {
         rect.x = getRandom(BOUNDS_X);
         rect.y = getRandom(BOUNDS_Y);
     }
-
     hunger = 50;
     health = myDNA.maxHealth / 2;
     gender = rand() % 2;
@@ -68,15 +67,15 @@ void Organism::Priority() {
 void Organism::setTarget() {
     std::random_shuffle(nearMe.begin(), nearMe.end());
 
-    for (std::vector<Organism *>::iterator it = nearMe.begin(); it != nearMe.end(); it++) {
-        if (((*it)->getType() == myDNA.eatType && hungry) || ((*it)->getType() == CORPSE_TYPE && starving)) {
-            target = *it;
+    for (auto &it : nearMe) {
+        if ((it->getType() == myDNA.eatType && hungry) || (it->getType() == CORPSE_TYPE && starving)) {
+            target = it;
             hasTarget = true;
             wander = false;
             break;
         }
-        if ((*it)->getType() == myDNA.type && able && (*it)->getGender() != gender) {
-            target = *it;
+        if (it->getType() == myDNA.type && able && it->getGender() != gender) {
+            target = it;
             hasTarget = true;
             wander = false;
             break;
@@ -91,10 +90,9 @@ void Organism::setTarget() {
 }
 
 void Organism::checkTarget() {
-    for (std::vector<Organism *>::iterator it = nearMe.begin(); it != nearMe.end(); it++)
-        if (target == *it)
+    for (auto &it : nearMe)
+        if (target == it)
             return;
-
     hasTarget = false;
 }
 

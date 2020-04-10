@@ -13,12 +13,11 @@ include_directories(PUBLIC ${OPENGL_INCLUDE_DIR})
 
 FILE(COPY ${PROJECT_SOURCE_DIR}/inc DESTINATION ${CMAKE_BINARY_DIR}/Debug/bin/)
 
-
 add_library(imgui
         # Main Imgui files
         ../imgui/imgui.cpp ../imgui/imgui_draw.cpp ../imgui/imgui_widgets.cpp ../imgui/imgui_demo.cpp
         # SDL2+OpenGL-specific files
-        ../imgui/examples/imgui_impl_sdl.cpp ../imgui/examples/imgui_impl_opengl3.cpp)
+        ../imgui/examples/imgui_impl_sdl.cpp ../imgui/examples/imgui_impl_opengl3.cpp inc/opengl/renderbatch.cpp inc/opengl/renderbatch.h)
 # Make SDL2 available to Imgui
 target_include_directories(imgui PUBLIC ${SDL2_INCLUDE_DIRS})
 # imgui/exapmles/ contains the sdl implementation
@@ -38,6 +37,7 @@ link_libraries(
 add_executable(natures
         geoshader.cpp
         spritebatch.cpp
+        treespritebatch.cpp
         list.cpp
         dna.cpp
         timer.cpp

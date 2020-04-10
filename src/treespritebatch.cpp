@@ -1,12 +1,12 @@
-#include "opengl/spritebatch.hpp"
+#include "opengl/treespritebatch.hpp"
 
-SpriteBatch::SpriteBatch(GeoShader theshader) : _vbo(0), _vao(0), shader(theshader) {}
+TreeSpriteBatch::TreeSpriteBatch(GeoShader theshader) : _vbo(0), _vao(0), shader(theshader) {}
 
-void SpriteBatch::init() {
+void TreeSpriteBatch::init() {
     createVertexArray();
 }
 
-void SpriteBatch::begin() {
+void TreeSpriteBatch::begin() {
     glEnable(GL_PROGRAM_POINT_SIZE);
     _renderBatches.clear();
     // Makes _glpyhs.size() == 0, however it does not free internal memory.
@@ -14,7 +14,7 @@ void SpriteBatch::begin() {
     _gfx.clear();
 }
 
-void SpriteBatch::end() {
+void TreeSpriteBatch::end() {
     // Set up all pointers for fast sorting
     _gfxPtr.resize(_gfx.size());
     for (int i = 0; i < _gfx.size(); i++)
@@ -24,28 +24,28 @@ void SpriteBatch::end() {
     createRenderBatches();
 }
 
-void SpriteBatch::draw(Rectangle r, DNA::Visuals v) {
+void TreeSpriteBatch::draw(Rectangle r, DNA::Visuals v) {
     _gfx.emplace_back(std::make_pair(r, v));
 }
 
-void SpriteBatch::renderBatch() {
+void TreeSpriteBatch::renderBatch() {
     // Bind our VAO. This sets up the opengl state we need, including the
     // vertex attribute pointers and it binds the VBO
-    glBindVertexArray(_vao);
     shader.Bind();
+    glBindVertexArray(_vao);
     //glBindTexture(GL_TEXTURE_2D, _renderBatches[i].texture);
     for (auto &_renderBatche : _renderBatches)
-        glDrawArrays(GL_POINTS, _renderBatche.offset, _renderBatche.numVertices);
+        glDrawArrays(GL_QUADS, _renderBatche.offset, _renderBatche.numVertices);
 
     glBindVertexArray(0);
 }
 
-void SpriteBatch::createRenderBatches() {
+void TreeSpriteBatch::createRenderBatches() {
     // This will store all the vertices that we need to upload
     std::vector<float> vertices;
     // Resize the buffer to the exact size we need so we can treat
     // it like an array
-    vertices.resize(_gfxPtr.size() * 6);
+    vertices.resize(_gfxPtr.size() * 8);
 
     if (_gfxPtr.empty()) {
         return;
@@ -55,15 +55,17 @@ void SpriteBatch::createRenderBatches() {
     int cv = 0; // current vertex
 
     //Add the first batch
-    _renderBatches.emplace_back(offset, 6);
+    _renderBatches.emplace_back(offset, 8);
     vertices[cv++] = _gfxPtr[0]->first.x;
     vertices[cv++] = _gfxPtr[0]->first.y;
+    vertices[cv++] = _gfxPtr[0]->first.w;
+    vertices[cv++] = _gfxPtr[0]->first.h;
     vertices[cv++] = _gfxPtr[0]->second.red;
     vertices[cv++] = _gfxPtr[0]->second.green;
     vertices[cv++] = _gfxPtr[0]->second.blue;
     vertices[cv++] = SIDES;
 
-    offset += 6;
+    offset += 8;
 
     //Add all the rest of the glyphs
     //std::cout << "ptr size = " <<  _gfxPtr.size() << std::endl;
@@ -71,19 +73,21 @@ void SpriteBatch::createRenderBatches() {
         // Check if this glyph can be part of the current batch
         //if (_gfxPtr[cg]->texture != _gfxPtr[cg - 1]->texture) {
         // Make a new batch
-        //    _renderBatches.emplace_back(offset, 6);
+        //    _renderBatches.emplace_back(offset, 8);
         //} else {
         // If its part of the current batch, just increase numVertices
-        _renderBatches.back().numVertices += 6;
+        _renderBatches.back().numVertices += 8;
         //}
         vertices[cv++] = _gfxPtr[cg]->first.x;
         vertices[cv++] = _gfxPtr[cg]->first.y;
+        vertices[cv++] = _gfxPtr[cg]->first.w;
+        vertices[cv++] = _gfxPtr[cg]->first.h;
         vertices[cv++] = _gfxPtr[cg]->second.red;
         vertices[cv++] = _gfxPtr[cg]->second.green;
         vertices[cv++] = _gfxPtr[cg]->second.blue;
         vertices[cv++] = SIDES;
 
-        offset += 6;
+        offset += 8;
     }
 
     // Bind our VBO
@@ -96,7 +100,7 @@ void SpriteBatch::createRenderBatches() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void SpriteBatch::createVertexArray() {
+void TreeSpriteBatch::createVertexArray() {
     // Generate the VAO if it isn't already generated
     if (_vao == 0)
         glGenVertexArrays(1, &_vao);
@@ -111,8 +115,8 @@ void SpriteBatch::createVertexArray() {
     glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 
     //Tell opengl what attribute arrays we need
-    GLint posAttrib = glGetAttribLocation(shader.m_program, "pos");
-    glEnableVertexAttribArray(posAttrib);
+    GLint recAttrib = glGetAttribLocation(shader.m_program, "rec");
+    glEnableVertexAttribArray(recAttrib);
 
     GLint colAttrib = glGetAttribLocation(shader.m_program, "color");
     glEnableVertexAttribArray(colAttrib);
@@ -123,21 +127,24 @@ void SpriteBatch::createVertexArray() {
     //glEnableVertexAttribArray(2);
 
     //This is the position attribute pointer
-    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+
+    glVertexAttribPointer(recAttrib, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0);
     //This is the color attribute pointer
-    glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *) (2 * sizeof(float)));
+    glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) (4 * sizeof(float)));
     //This is the UV attribute pointer
-    glVertexAttribPointer(sidesAttrib, 1, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *) (5 * sizeof(float)));
+    glVertexAttribPointer(sidesAttrib, 1, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) (7 * sizeof(float)));
     glBindVertexArray(0);
 }
 
-
-void SpriteBatch::render(std::__cxx11::list<Organism> list) {
+void TreeSpriteBatch::render(std::vector<Rectangle> list) {
     begin();
-    for (auto &organism : list)
-        draw(organism.getRectangle(), organism.getVisuals());
+    float i = -0.5f;
+    for (auto &rectangle : list) {
+        draw(rectangle, {0.5f + i, 0.8f - 1, 0.2f + 1});
+        i += 0.0005f;
+    }
+
     end();
     renderBatch();
 }
-
 
