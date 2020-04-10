@@ -9,40 +9,39 @@
 
 #include "sdl/window.hpp"
 
-
-struct QuadtreeVertexData{
+struct QuadtreeVertexData {
     Rectangle rectangle;
     int level;
 };
 
 class Quadtree {
-public:
-    Quadtree();
+ public:
+  Quadtree ();
 
-    Quadtree(int pLevel, Rectangle pBounds);
+  Quadtree (int pLevel, Rectangle pBounds);
 
-    void clear();
+  void clear ();
 
-    void insert(Organism *iter);
+  void insert (Organism *iter);
 
-    std::vector<Organism *> retrieve(std::vector<Organism *> returnObject, Rectangle obj);
+  std::vector<Organism *> retrieve (std::vector<Organism *> returnObject, Rectangle obj);
 
-    std::vector<Organism *> objects;
+  std::vector<Organism *> objects;
 
-    Quadtree *nodes;
+  Quadtree *nodes;
 
-    std::vector<QuadtreeVertexData> Draw();
+  std::vector<QuadtreeVertexData> Draw ();
 
-private:
-    void split();
+ private:
+  void split ();
 
-    int getIndex(Rectangle object);
+  int getIndex (Rectangle object);
 
-    int level;
-    bool isNull = true;
+  int level;
+  bool isNull = true;
 
-    Rectangle rect;
-    Rectangle bounds;
+  Rectangle rect;
+  Rectangle bounds;
 };
 
 #endif

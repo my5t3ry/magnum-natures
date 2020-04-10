@@ -23,7 +23,7 @@ target_include_directories(imgui PUBLIC ${SDL2_INCLUDE_DIRS})
 # imgui/exapmles/ contains the sdl implementation
 target_include_directories(imgui PUBLIC ../imgui/ ../imgui/examples/)
 # Configure Imgui to use OpengGL through SDL2
-target_compile_definitions(imgui PUBLIC IMGUI_IMPL_OPENGL_LOADER_CUSTOM=<SDL_opengl.h>  GL_GLEXT_PROTOTYPES=1)
+target_compile_definitions(imgui PUBLIC IMGUI_IMPL_OPENGL_LOADER_CUSTOM=<SDL_opengl.h> GL_GLEXT_PROTOTYPES=1)
 
 
 link_libraries(

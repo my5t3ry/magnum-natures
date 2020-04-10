@@ -9,28 +9,28 @@
 #include "quadtree.hpp"
 
 class List {
-public:
-    List();
+ public:
+  List ();
 
-    void Behavior();
+  void Behavior ();
 
-    void Place();
+  void Place ();
 
-    void Remove();
+  void Remove ();
 
-    std::vector<Organism *> getNear(Organism o);
+  std::vector<Organism *> getNear (Organism o);
 
-    std::list<Organism> organisms;
+  std::list<Organism> organisms;
 
-    Quadtree tree;
+  Quadtree tree;
 
-    std::list<Organism> GetCarnivors();
+  std::list<Organism> GetCarnivors ();
 
-    std::list<Organism> GetHerbavors();
+  std::list<Organism> GetHerbavors ();
 
-    std::list<Organism> GetCorpses();
+  std::list<Organism> GetCorpses ();
 
-    std::list<Organism> GetPlants();
+  std::list<Organism> GetPlants ();
 };
 
 #endif

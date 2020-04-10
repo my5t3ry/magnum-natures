@@ -12,31 +12,31 @@
 #include "dna.hpp"
 
 class SpriteBatch {
-public:
-    SpriteBatch(GeoShader theshader);
+ public:
+  SpriteBatch (GeoShader theshader);
 
-    void init();
+  void init ();
 
-    void begin();
+  void begin ();
 
-    void end();
+  void end ();
 
-    void draw(Rectangle r, DNA::Visuals v);
+  void draw (Rectangle r, DNA::Visuals v);
 
-    void renderBatch();
+  void renderBatch ();
 
-    void render(std::__cxx11::list<Organism> list);
+  void render (std::__cxx11::list<Organism> list);
 
-private:
-    void createRenderBatches();
-    void createVertexArray();
-    GLuint _vbo;
-    GLuint _vao;
-    std::vector<std::pair<Rectangle, DNA::Visuals> *> _gfxPtr;
-    std::vector<std::pair<Rectangle, DNA::Visuals>> _gfx;
-    std::vector<RenderBatch> _renderBatches;
+ private:
+  void createRenderBatches ();
+  void createVertexArray ();
+  GLuint _vbo;
+  GLuint _vao;
+  std::vector<std::pair<Rectangle, DNA::Visuals> *> _gfxPtr;
+  std::vector<std::pair<Rectangle, DNA::Visuals>> _gfx;
+  std::vector<RenderBatch> _renderBatches;
 
-    GeoShader shader;
+  GeoShader shader;
 };
 
 #endif

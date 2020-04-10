@@ -7,23 +7,23 @@
 #include "constants.hpp"
 
 class Window {
-public:
-    Window(int width, int height, const std::string &title);
+ public:
+  Window (int width, int height, const std::string &title);
 
-    ~Window();
+  ~Window ();
 
-    void Clear();
+  void Clear ();
 
-    void swapBuffers();
-    SDL_Window *main;
-    SDL_GLContext glContext;
+  void swapBuffers ();
+  SDL_Window *main;
+  SDL_GLContext glContext;
 
-    bool getClosed() { return closed; };
+  bool getClosed ()
+  { return closed; };
 
+ private:
 
-private:
-
-    bool closed;
+  bool closed;
 };
 
 #endif

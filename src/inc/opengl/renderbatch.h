@@ -8,13 +8,13 @@
 #include "constants.hpp"
 
 class RenderBatch {
-public:
-    RenderBatch(GLuint Offset, GLuint NumVertices) : offset(Offset),
-                                                     numVertices(NumVertices) {}
+ public:
+  RenderBatch (GLuint Offset, GLuint NumVertices) : offset (Offset),
+                                                    numVertices (NumVertices)
+  {}
 
-    GLuint offset;
-    GLuint numVertices;
+  GLuint offset;
+  GLuint numVertices;
 };
-
 
 #endif //MAGNUM_NATURE_SIM_RENDERBATCH_H

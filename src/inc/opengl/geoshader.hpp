@@ -8,27 +8,27 @@
 #include "transform.hpp"
 
 class GeoShader {
-public:
-    GeoShader(const std::string &fileName);
+ public:
+  GeoShader (const std::string &fileName);
 
-    void Bind();
+  void Bind ();
 
-    void Update(const Camera &camera);
+  void Update (const Camera &camera);
 
-    virtual         ~GeoShader();
+  virtual         ~GeoShader ();
 
-    GLuint m_program;
+  GLuint m_program;
 
-private:
-    std::string LoadShader(const std::string &fileName);
-    Transform transform;
+ private:
+  std::string LoadShader (const std::string &fileName);
+  Transform transform;
 
-    void CheckShaderError(GLuint shader, GLuint flag, bool isProgram, const std::string &errorMessage);
+  void CheckShaderError (GLuint shader, GLuint flag, bool isProgram, const std::string &errorMessage);
 
-    GLuint CreateShader(const std::string &text, GLenum shaderType);
+  GLuint CreateShader (const std::string &text, GLenum shaderType);
 
-    GLuint m_shaders[NUM_SHADERS];
-    GLuint m_uniforms[NUM_UNIFORMS];
+  GLuint m_shaders[NUM_SHADERS];
+  GLuint m_uniforms[NUM_UNIFORMS];
 };
 
 #endif

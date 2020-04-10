@@ -10,37 +10,35 @@
 #include "geoshader.hpp"
 #include "dna.hpp"
 
-
 class TreeSpriteBatch {
-public:
-    TreeSpriteBatch(GeoShader theshader);
+ public:
+  TreeSpriteBatch (GeoShader theshader);
 
-    void init();
+  void init ();
 
-    void begin();
+  void begin ();
 
-    void end();
+  void end ();
 
-    void draw(glm::vec2 pos, glm::vec3 v);
+  void draw (glm::vec2 pos, glm::vec3 v);
 
-    void renderBatch();
+  void renderBatch ();
 
-    void render(std::vector<QuadtreeVertexData> list);
+  void render (std::vector<QuadtreeVertexData> list);
 
+ private:
+  void createRenderBatches ();
 
-private:
-    void createRenderBatches();
+  void createVertexArray ();
 
-    void createVertexArray();
+  GLuint _vbo;
+  GLuint _vao;
 
-    GLuint _vbo;
-    GLuint _vao;
+  std::vector<std::pair<glm::vec2, glm::vec3> *> _gfxPtr;
+  std::vector<std::pair<glm::vec2, glm::vec3>> _gfx;
+  std::vector<RenderBatch> _renderBatches;
 
-    std::vector<std::pair<glm::vec2, glm::vec3> *> _gfxPtr;
-    std::vector<std::pair<glm::vec2, glm::vec3>> _gfx;
-    std::vector<RenderBatch> _renderBatches;
-
-    GeoShader shader;
+  GeoShader shader;
 
 };
 

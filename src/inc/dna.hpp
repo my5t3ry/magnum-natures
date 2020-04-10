@@ -7,34 +7,35 @@
 #include "functions.hpp"
 
 class DNA {
-public:
-    DNA() {};
+ public:
+  DNA ()
+  {};
 
-    DNA(int t);
+  DNA (int t);
 
-    DNA combine(DNA D);
+  DNA combine (DNA D);
 
-    int type;
-    int eatType;
-    int maxHealth;
-    int bestSense;
-    int bite;
-    int expectedPregnancyTime;
-    int expectedAge;
-    int growAmount;
-    int hungryAmount;
-    int starveAmount;
+  int type;
+  int eatType;
+  int maxHealth;
+  int bestSense;
+  int bite;
+  int expectedPregnancyTime;
+  int expectedAge;
+  int growAmount;
+  int hungryAmount;
+  int starveAmount;
 
-    float reach;
-    float speed;
-    float mutationPercent;
-    float mutationChance;
+  float reach;
+  float speed;
+  float mutationPercent;
+  float mutationChance;
 
-    struct Visuals {
-        float red;
-        float green;
-        float blue;
-    } appearance;
+  struct Visuals {
+      float red;
+      float green;
+      float blue;
+  } appearance;
 };
 
 #endif

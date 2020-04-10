@@ -10,5 +10,4 @@
 #include "sdl/event.hpp"
 #include "sdl/window.hpp"
 
-
 #endif

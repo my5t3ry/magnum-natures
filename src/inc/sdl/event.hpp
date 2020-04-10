@@ -4,22 +4,22 @@
 #include <SDL2/SDL.h>
 
 class Event {
-public:
-    Event();
+ public:
+  Event ();
 
-    int Poll();
+  int Poll ();
 
-    void off();
+  void off ();
 
-    bool gRun();
+  bool gRun ();
 
-    SDL_Event &gEvent();
+  SDL_Event &gEvent ();
 
-    int gEventType();
+  int gEventType ();
 
-private:
-    bool run;
-    SDL_Event v;
+ private:
+  bool run;
+  SDL_Event v;
 };
 
 #endif
