@@ -43,7 +43,7 @@ int main() {
     ImGui::StyleColorsDark();
     ImGuiStyle &style = ImGui::GetStyle();
     style.ScaleAllSizes(scaleFactor);
-    style.Alpha=0.8;
+    style.Alpha = 0.8;
 
     // Setup Platform/Renderer bindings
     // window is the SDL_Window*
@@ -96,12 +96,11 @@ int main() {
         ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_FirstUseEver);
         {
             static float f = 0.0f;
-            static int counter = 0;
-            ;
+            static int counter = 0;;
             ImGui::Begin(
                     "->");                          // Create a window called "Hello, world!" and append into it.
-            ImGui::Text("%.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate) ;
-            ImGui::Text("%.1f fps",ImGui::GetIO().Framerate);
+            ImGui::Text("%.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
+            ImGui::Text("%.1f fps", ImGui::GetIO().Framerate);
             ImGui::Text("Total organisms (%d)", static_cast<int>(L.organisms.size()));
             ImGui::Text("Carnivors (%d)", static_cast<int>(L.GetCarnivors().size()));
             ImGui::Text("Herbavors (%d)", static_cast<int>(L.GetHerbavors().size()));
@@ -121,7 +120,9 @@ int main() {
         L.Behavior();
         L.Place();
 
-        _treeSpriteBatch.render(L.tree.Draw());
+         std::vector<QuadtreeVertexData> trees = L.tree.Draw();
+        std::reverse(trees.begin(), trees.end());
+        _treeSpriteBatch.render(trees);
         _spriteBatch.render(L.organisms);
 // Render imgui
         ImGui::Render();

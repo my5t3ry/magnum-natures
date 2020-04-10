@@ -8,10 +8,10 @@ Quadtree::Quadtree(int pLevel, Rectangle pBounds) {
     bounds = pBounds;
     isNull = false;
     nodes = new Quadtree[4];
-    rect.x = pBounds.x * 1.01;
-    rect.y = pBounds.y * 1.05;
-    rect.h = bounds.h*0.7;
-    rect.w = bounds.w*0.7;
+    rect.x = pBounds.x * 1.0;
+    rect.y = pBounds.y * 1.0;
+    rect.h = bounds.h*0.5;
+    rect.w = bounds.w*0.5;
 }
 
 void Quadtree::clear() {
