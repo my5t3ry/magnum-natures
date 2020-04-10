@@ -21,7 +21,7 @@ List::List() {
         organisms.push_back(X);
     }
 
-    Rectangle R1 = Rectangle(0, 0, BOUNDS * 2, BOUNDS * 2);
+    Rectangle R1 = Rectangle(0, 0, BOUNDS_X * 2, BOUNDS_Y * 2);
     tree = Quadtree(0, R1);
 }
 
@@ -57,10 +57,9 @@ void List::Behavior() {
     }
 }
 
-std::list<Organism> List::GetCarnivors(){
+std::list<Organism> List::GetCarnivors() {
     std::list<Organism> result;
-    std::copy_if(organisms.begin(), organisms.end(), std::back_inserter(result),[](Organism val)
-    {
+    std::copy_if(organisms.begin(), organisms.end(), std::back_inserter(result), [](Organism val) {
         return (val.getType() == CARNIVORE_TYPE);
     });
     return result;
@@ -85,8 +84,7 @@ std::vector<Organism *> List::getNear(Organism c) {
 
 std::list<Organism> List::GetHerbavors() {
     std::list<Organism> result;
-    std::copy_if(organisms.begin(), organisms.end(), std::back_inserter(result),[](Organism val)
-    {
+    std::copy_if(organisms.begin(), organisms.end(), std::back_inserter(result), [](Organism val) {
         return (val.getType() == HERBAVORE_TYPE);
     });
     return result;
@@ -94,8 +92,7 @@ std::list<Organism> List::GetHerbavors() {
 
 std::list<Organism> List::GetPlants() {
     std::list<Organism> result;
-    std::copy_if(organisms.begin(), organisms.end(), std::back_inserter(result),[](Organism val)
-    {
+    std::copy_if(organisms.begin(), organisms.end(), std::back_inserter(result), [](Organism val) {
         return (val.getType() == PLANT_TYPE);
     });
     return result;
@@ -104,8 +101,7 @@ std::list<Organism> List::GetPlants() {
 
 std::list<Organism> List::GetCorpses() {
     std::list<Organism> result;
-    std::copy_if(organisms.begin(), organisms.end(), std::back_inserter(result),[](Organism val)
-    {
+    std::copy_if(organisms.begin(), organisms.end(), std::back_inserter(result), [](Organism val) {
         return (val.getType() == CORPSE_TYPE);
     });
     return result;

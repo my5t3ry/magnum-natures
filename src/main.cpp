@@ -16,7 +16,7 @@ int main() {
     glEnable(GL_PROGRAM_POINT_SIZE);
 
     Transform transform;
-    Camera camera(glm::vec3(0, 0, 70), 70.0f, (float) 800 / (float) 600, 0.31f, 1000.0f);
+    Camera camera(glm::vec3(0, 0, 480), 70.0f, (float) WINDOW_X / (float) WINDOW_Y, 0.31f, 1000.0f);
     GeoShader shader("./inc/opengl/shaders/theshader");
     SpriteBatch _spriteBatch(shader);
 
@@ -55,7 +55,25 @@ int main() {
                     && event.window.event == SDL_WINDOWEVENT_CLOSE
                     && event.window.windowID == SDL_GetWindowID(main.main))) {
                 done = true;
-            }
+            } else if (event.type == SDL_KEYDOWN)
+                switch (event.key.keysym.sym) {
+                    case SDLK_LEFT:
+                        camera.MoveLeft();
+                        break;
+                    case SDLK_RIGHT:
+                        camera.MoveRight();
+                        break;
+                    case SDLK_UP:
+                        camera.MoveForward();
+                        break;
+                    case SDLK_DOWN:
+                        camera.MoveBackward();
+                    default:
+                        break;
+                }
+            int uniModel = glGetUniformLocation(shader.m_program, "MVP");
+            glUniformMatrix4fv(uniModel, 1, false, &transform.GetMVP(camera)[0][0]);
+
         }
 
 // Start the Dear ImGui frame

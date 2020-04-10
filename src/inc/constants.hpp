@@ -11,12 +11,13 @@
 #include <glm/gtx/transform.hpp>
 
 // General
-const int HERBAVORES = 120;
-const int CARNIVORES = 10;
-const int PLANTS = 3500;
+const int HERBAVORES = 300;
+const int CARNIVORES = 30;
+const int PLANTS = 6500;
 const int WINDOW_X = 1920;
 const int WINDOW_Y = 1280;
-const float BOUNDS = 30;
+const float BOUNDS_X = 320;
+const float BOUNDS_Y = 180;
 
 // Types
 const int HERBAVORE_TYPE = 1;
@@ -32,8 +33,8 @@ const int CREATURE_EXP_PREG_TIME = 1000;
 const int CREATURE_EXP_AGE = 10000;
 const int CREATURE_HUNGRY_AMOUNT = 50;
 const int CREATURE_STARVE_AMOUNT = 90;
-const float CREATURE_SPEED = .05;
-const float CREATURE_REACH = .1;
+const float CREATURE_SPEED = .35;
+const float CREATURE_REACH = .4;
 const float CREATURE_MUTATION_PERCENT = .25;
 const float CREATURE_MUTATION_CHANCE = .05;
 
@@ -51,10 +52,10 @@ const int NUM_UNIFORMS = 3;
 const float SIDES = 5;
 
 // Quadtree
-const int MAX_OBJECTS = 10;
+const int MAX_OBJECTS = 40;
 const int MAX_LEVELS = 20;
 
 // Camera
-const float MOVE_AMOUNT = .2;
+const float MOVE_AMOUNT = .5;
 
 #endif

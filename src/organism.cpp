@@ -5,8 +5,8 @@ Organism::Organism(Rectangle r, DNA d) {
     myDNA = d;
 
     if (rect.x == 0 && rect.y == 0) {
-        rect.x = getRandom(BOUNDS);
-        rect.y = getRandom(BOUNDS);
+        rect.x = getRandom(BOUNDS_X);
+        rect.y = getRandom(BOUNDS_Y);
     }
 
     hunger = 50;
@@ -85,7 +85,7 @@ void Organism::setTarget() {
 
     if (!hasTarget && !wander) {
         wander = true;
-        Rectangle tmp(getRandom(BOUNDS), getRandom(BOUNDS), 0, 0);
+        Rectangle tmp(getRandom(BOUNDS_X), getRandom(BOUNDS_Y), 0, 0);
         wTarget = tmp;
     }
 }
