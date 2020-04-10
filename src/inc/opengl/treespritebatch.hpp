@@ -25,7 +25,7 @@ public:
 
     void renderBatch();
 
-    void render(std::vector<Rectangle> list);
+    void render(std::vector<QuadtreeVertexData> list);
 
 
 private:

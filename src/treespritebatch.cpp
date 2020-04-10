@@ -35,7 +35,7 @@ void TreeSpriteBatch::renderBatch() {
     glBindVertexArray(_vao);
     //glBindTexture(GL_TEXTURE_2D, _renderBatches[i].texture);
     for (auto &_renderBatche : _renderBatches)
-        glDrawArrays( GL_QUADS, _renderBatche.offset, _renderBatche.numVertices);
+        glDrawArrays(GL_QUADS, _renderBatche.offset, _renderBatche.numVertices);
 
     glBindVertexArray(0);
 }
@@ -132,15 +132,16 @@ void TreeSpriteBatch::createVertexArray() {
     glBindVertexArray(0);
 }
 
-void TreeSpriteBatch::render(std::vector<Rectangle> list) {
+void TreeSpriteBatch::render(std::vector<QuadtreeVertexData> list) {
     begin();
-    float i = 0.7f;
-    glm::vec3 col = {0.1f*i, 0.15f*i, 0.1f*i};
-    for (auto &rectangle : list) {
-        draw({rectangle.x, rectangle.y}, col);
-        draw({rectangle.x + rectangle.w, rectangle.y}, col);
-        draw({rectangle.x, rectangle.y + rectangle.h}, col);
-        draw({rectangle.x + rectangle.w, rectangle.y + rectangle.h}, col);
+
+    for (auto &vertexData : list) {
+        float i = vertexData.level / 100.0 * 15.0 + 1.0;
+        glm::vec3 col = {0.05f * i, 0.1f * i, 0.05f * i};
+        draw({vertexData.rectangle.x, vertexData.rectangle.y}, col);
+        draw({vertexData.rectangle.x + vertexData.rectangle.w, vertexData.rectangle.y}, col);
+        draw({vertexData.rectangle.x, vertexData.rectangle.y + vertexData.rectangle.h}, col);
+        draw({vertexData.rectangle.x + vertexData.rectangle.w, vertexData.rectangle.y + vertexData.rectangle.h}, col);
 //        draw(rectangle, {0.5f + i, 0.8f - 1, 0.2f + 1});
         i += 0.0005f;
     }

@@ -34,13 +34,13 @@ const int CREATURE_EXP_AGE = 10000;
 const int CREATURE_HUNGRY_AMOUNT = 50;
 const int CREATURE_STARVE_AMOUNT = 90;
 const float CREATURE_SPEED = .35;
-const float CREATURE_REACH = 1.4;
+const float CREATURE_REACH = 1.7;
 const float CREATURE_MUTATION_PERCENT = .25;
 const float CREATURE_MUTATION_CHANCE = .05;
 
 // Plant Stats
 const int PLANT_MAX_HEALTH = 200;
-const int PLANT_GROW_AMOUNT = 1;
+const int PLANT_GROW_AMOUNT = 2;
 
 // Corpse Stats
 const int CORPSE_MAX_HEALTH = 400;
@@ -53,7 +53,7 @@ const float SIDES = 5;
 
 // Quadtree
 const int MAX_OBJECTS = 40;
-const int MAX_LEVELS = 20;
+const int MAX_LEVELS = 5;
 
 // Camera
 const float MOVE_AMOUNT = 2.5;

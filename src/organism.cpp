@@ -1,5 +1,7 @@
 #include "organism.hpp"
 
+#include <random>
+
 Organism::Organism(Rectangle r, DNA d) {
     rect = r;
     myDNA = d;
@@ -65,7 +67,7 @@ void Organism::Priority() {
 }
 
 void Organism::setTarget() {
-    std::random_shuffle(nearMe.begin(), nearMe.end());
+    std::shuffle(nearMe.begin(), nearMe.end(), std::mt19937(std::random_device()()));
 
     for (auto &it : nearMe) {
         if ((it->getType() == myDNA.eatType && hungry) || (it->getType() == CORPSE_TYPE && starving)) {

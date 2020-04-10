@@ -10,8 +10,8 @@ Quadtree::Quadtree(int pLevel, Rectangle pBounds) {
     nodes = new Quadtree[4];
     rect.x = pBounds.x * 1.01;
     rect.y = pBounds.y * 1.05;
-    rect.h = 20.0;
-    rect.w = 20.0;
+    rect.h = bounds.h*0.6;
+    rect.w = bounds.w*0.6;
 }
 
 void Quadtree::clear() {
@@ -22,7 +22,6 @@ void Quadtree::clear() {
             nodes[i].objects.clear();
             nodes[i].clear();
         }
-
     delete[] nodes;
     if (level == 0)
         nodes = new Quadtree[4];
@@ -31,14 +30,13 @@ void Quadtree::clear() {
 void Quadtree::split() {
     float subWidth = (bounds.w / 2);
     float subHeight = (bounds.h / 2);
-    float x = bounds.x;
-    float y = bounds.y;
+    float x = rect.x;
+    float y = rect.y;
 
-
-    Rectangle R0(x + subWidth / 2, y + subHeight / 2, subWidth, subHeight);
-    Rectangle R1(x - subWidth / 2, y + subHeight / 2, subWidth, subHeight);
-    Rectangle R2(x - subWidth / 2, y - subHeight / 2, subWidth, subHeight);
-    Rectangle R3(x + subWidth / 2, y - subHeight / 2, subWidth, subHeight);
+    Rectangle R0(x + subWidth , y + subHeight , subWidth, subHeight);
+    Rectangle R1(x - subWidth , y + subHeight , subWidth, subHeight);
+    Rectangle R2(x - subWidth , y - subHeight , subWidth, subHeight);
+    Rectangle R3(x + subWidth , y - subHeight , subWidth, subHeight);
 
     Quadtree Q0(level + 1, R0);
     Quadtree Q1(level + 1, R1);
@@ -95,24 +93,24 @@ void Quadtree::insert(Organism *iter) {
     }
 }
 
-std::vector<Rectangle> Quadtree::Draw() {
-    std::vector<Rectangle> retdat;
+std::vector<QuadtreeVertexData> Quadtree::Draw() {
+    std::vector<QuadtreeVertexData> retdat;
     int i;
     for (i = 0; i < 4; i++) {
         if (!nodes[i].isNull) {
-            std::vector<Rectangle> temp = nodes[i].Draw();
+            std::vector<QuadtreeVertexData> temp =nodes[i].Draw();;
             retdat.insert(retdat.end(), temp.begin(), temp.end());
         }
     }
     if (!nodes[0].isNull)
-        retdat.emplace_back(nodes[0].rect);
+        retdat.push_back({nodes[0].rect,nodes[0].level});
     if (!nodes[1].isNull)
-        retdat.emplace_back(nodes[1].rect);
+        retdat.push_back({nodes[1].rect,nodes[1].level});
     if (!nodes[2].isNull)
-        retdat.emplace_back(nodes[2].rect);
+        retdat.push_back({nodes[2].rect,nodes[2].level});
     if (!nodes[3].isNull)
-        retdat.emplace_back(nodes[3].rect);
-    retdat.emplace_back(rect);
+        retdat.push_back({nodes[3].rect,nodes[3].level});
+    retdat.push_back({rect,level});
     return retdat;
 }
 

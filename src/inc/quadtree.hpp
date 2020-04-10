@@ -9,6 +9,12 @@
 
 #include "sdl/window.hpp"
 
+
+struct QuadtreeVertexData{
+    Rectangle rectangle;
+    int level;
+};
+
 class Quadtree {
 public:
     Quadtree();
@@ -25,7 +31,7 @@ public:
 
     Quadtree *nodes;
 
-    std::vector<Rectangle> Draw();
+    std::vector<QuadtreeVertexData> Draw();
 
 private:
     void split();
