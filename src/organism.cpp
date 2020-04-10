@@ -31,7 +31,6 @@ void Organism::Behavior() {
         this->checkTarget();
 
     this->Action();
-
     if (pregnate) {
         pregnancyTime++;
         if (pregnancyTime > myDNA.expectedPregnancyTime)
@@ -175,5 +174,5 @@ void Organism::grow() {
 }
 
 void Organism::takeBite(int bite) {
-    health -= bite;
+        health -= bite;
 }
