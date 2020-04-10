@@ -37,6 +37,7 @@ void Quadtree::split() {
 //    Rectangle R1(x + subWidth, y, subWidth, subHeight);
 //    Rectangle R2(x, y + subWidth, subWidth, subHeight);
 //    Rectangle R3(x + subWidth, y + subHeight, subWidth, subHeight);
+//
     Rectangle R0(x + subWidth , y + subHeight , subWidth, subHeight);
     Rectangle R1(x - subWidth , y + subHeight , subWidth, subHeight);
     Rectangle R2(x - subWidth , y - subHeight , subWidth, subHeight);
@@ -46,12 +47,13 @@ void Quadtree::split() {
     Quadtree Q1(level + 1, R1);
     Quadtree Q2(level + 1, R2);
     Quadtree Q3(level + 1, R3);
-
+//
     nodes[0] = Q0;
     nodes[1] = Q1;
     nodes[2] = Q2;
     nodes[3] = Q3;
 }
+
 
 int Quadtree::getIndex(Rectangle object) {
     int index = -1;
@@ -106,14 +108,19 @@ std::vector<QuadtreeVertexData> Quadtree::Draw() {
             retdat.insert(retdat.end(), temp.begin(), temp.end());
         }
     }
-    if (!nodes[0].isNull)
+
+    if (!nodes[0].isNull) {
         retdat.push_back({nodes[0].rect, nodes[0].level});
-    if (!nodes[1].isNull)
+    }
+    if (!nodes[1].isNull) {
         retdat.push_back({nodes[1].rect, nodes[1].level});
-    if (!nodes[2].isNull)
+    }
+    if (!nodes[2].isNull) {
         retdat.push_back({nodes[2].rect, nodes[2].level});
-    if (!nodes[3].isNull)
+    }
+    if (!nodes[3].isNull) {
         retdat.push_back({nodes[3].rect, nodes[3].level});
+    }
     retdat.push_back({rect, level});
     return retdat;
 }

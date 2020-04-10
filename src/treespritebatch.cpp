@@ -134,10 +134,9 @@ void TreeSpriteBatch::createVertexArray() {
 
 void TreeSpriteBatch::render(std::vector<QuadtreeVertexData> list) {
     begin();
-
     for (auto &vertexData : list) {
-        float i = (vertexData.level / 80.0) * 25.0 + 1.0;
-        glm::vec3 col = {0.03f * i, 0.05f * i, 0.03f * i};
+        float i = (vertexData.level / 80.0) * 28.0 + 1.0;
+        glm::vec3 col = {0.02f * i, 0.05f * i, 0.02f * i};
         draw({vertexData.rectangle.x, vertexData.rectangle.y}, col);
         draw({vertexData.rectangle.x, vertexData.rectangle.y + vertexData.rectangle.h}, col);
         draw({vertexData.rectangle.x + vertexData.rectangle.w, vertexData.rectangle.y + vertexData.rectangle.h}, col);
