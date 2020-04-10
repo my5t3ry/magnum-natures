@@ -40,9 +40,9 @@ DNA::DNA(int t) {
         type = PLANT_TYPE;
         maxHealth = PLANT_MAX_HEALTH;
         growAmount = PLANT_GROW_AMOUNT;
-        appearance.red = 0.2;
-        appearance.green = 0.55;
-        appearance.blue = 0.2;
+        appearance.red = 0.25;
+        appearance.green = 0.6;
+        appearance.blue = 0.25;
     } else if (t == CORPSE_TYPE) {
         type = CORPSE_TYPE;
         maxHealth = CORPSE_MAX_HEALTH;

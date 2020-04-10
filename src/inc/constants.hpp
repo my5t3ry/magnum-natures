@@ -54,7 +54,7 @@ const float SIDES = 5;
 
 // Quadtree
 const int MAX_OBJECTS = 40;
-const int MAX_LEVELS = 10;
+const int MAX_LEVELS = 6;
 
 // Camera
 const float MOVE_AMOUNT = 2.5;
