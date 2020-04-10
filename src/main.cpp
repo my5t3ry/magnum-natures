@@ -38,8 +38,15 @@ int main() {
     ImGui::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
     (void) io;
+
+    float scaleFactor = 1.5f;
+    io.Fonts->AddFontFromFileTTF("inc/SourceSansPro-Regular.ttf", 18.0f * scaleFactor, NULL, NULL);
+
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
+    ImGuiStyle &style = ImGui::GetStyle();
+    style.ScaleAllSizes(scaleFactor);
+
     // Setup Platform/Renderer bindings
     // window is the SDL_Window*
     // contex is the SDL_GLContext

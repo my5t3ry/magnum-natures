@@ -11,9 +11,9 @@
 #include <glm/gtx/transform.hpp>
 
 // General
-const int HERBAVORES = 450;
+const int HERBAVORES = 500;
 const int CARNIVORES = 35;
-const int PLANTS = 8500;
+const int PLANTS = 9000;
 const int WINDOW_X = 1920;
 const int WINDOW_Y = 1280;
 const float BOUNDS_X = 320;
@@ -56,6 +56,6 @@ const int MAX_OBJECTS = 40;
 const int MAX_LEVELS = 20;
 
 // Camera
-const float MOVE_AMOUNT = .5;
+const float MOVE_AMOUNT = 1.5;
 
 #endif
