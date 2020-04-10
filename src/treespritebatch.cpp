@@ -134,8 +134,8 @@ void TreeSpriteBatch::createVertexArray() {
 
 void TreeSpriteBatch::render(std::vector<Rectangle> list) {
     begin();
-    float i = 1.2f;
-    glm::vec3 col = {0.1f*i, 0.1f*i, 0.1f*i};
+    float i = 0.7f;
+    glm::vec3 col = {0.1f*i, 0.15f*i, 0.1f*i};
     for (auto &rectangle : list) {
         draw({rectangle.x, rectangle.y}, col);
         draw({rectangle.x + rectangle.w, rectangle.y}, col);

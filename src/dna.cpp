@@ -16,7 +16,7 @@ DNA::DNA(int t) {
         speed = CREATURE_SPEED;
         mutationPercent = CREATURE_MUTATION_PERCENT;
         mutationChance = CREATURE_MUTATION_CHANCE;
-        appearance.red = 0;
+        appearance.red = 1;
         appearance.green = 1;
         appearance.blue = 0;
     } else if (t == CARNIVORE_TYPE) {
@@ -30,19 +30,19 @@ DNA::DNA(int t) {
         hungryAmount = CREATURE_HUNGRY_AMOUNT;
         starveAmount = CREATURE_STARVE_AMOUNT;
         reach = CREATURE_REACH * 2;
-        speed = CREATURE_SPEED * 2;
+        speed = CREATURE_SPEED * 1.5;
         mutationPercent = CREATURE_MUTATION_PERCENT;
         mutationChance = CREATURE_MUTATION_CHANCE;
         appearance.red = 0;
-        appearance.green = 0;
+        appearance.green = 1;
         appearance.blue = 1;
     } else if (t == PLANT_TYPE) {
         type = PLANT_TYPE;
         maxHealth = PLANT_MAX_HEALTH;
         growAmount = PLANT_GROW_AMOUNT;
-        appearance.red = 1;
-        appearance.green = 1;
-        appearance.blue = 1;
+        appearance.red = 0.2;
+        appearance.green = 0.5;
+        appearance.blue = 0.2;
     } else if (t == CORPSE_TYPE) {
         type = CORPSE_TYPE;
         maxHealth = CORPSE_MAX_HEALTH;

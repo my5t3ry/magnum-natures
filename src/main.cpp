@@ -97,6 +97,7 @@ int main() {
         {
             static float f = 0.0f;
             static int counter = 0;
+            ;
             ImGui::Begin(
                     "->");                          // Create a window called "Hello, world!" and append into it.
             ImGui::Text("%.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate) ;

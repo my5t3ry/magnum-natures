@@ -27,14 +27,14 @@ const int CORPSE_TYPE = 4;
 
 // Creature stats
 const int CREATURE_MAX_HEALTH = 100;
-const int CREATURE_BEST_SENSE = 2;
+const int CREATURE_BEST_SENSE = 5;
 const int CREATURE_BITE = 5;
 const int CREATURE_EXP_PREG_TIME = 1000;
 const int CREATURE_EXP_AGE = 10000;
 const int CREATURE_HUNGRY_AMOUNT = 50;
 const int CREATURE_STARVE_AMOUNT = 90;
 const float CREATURE_SPEED = .35;
-const float CREATURE_REACH = .4;
+const float CREATURE_REACH = 1.4;
 const float CREATURE_MUTATION_PERCENT = .25;
 const float CREATURE_MUTATION_CHANCE = .05;
 

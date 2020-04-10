@@ -67,8 +67,8 @@ std::list<Organism> List::GetCarnivors() {
 
 void List::Place() {
     tree.clear();
-    for (auto it = organisms.begin(); it != organisms.end(); it++)
-        tree.insert(&(*it));;
+    for (auto & organism : organisms)
+        tree.insert(&organism);;
 }
 
 std::vector<Organism *> List::getNear(Organism c) {
