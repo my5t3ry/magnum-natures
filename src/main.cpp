@@ -15,7 +15,7 @@ int main() {
     Window main(WINDOW_X, WINDOW_Y, "natures");
     List L;
 
-    Camera camera(glm::vec3(0, 0, 500), 70.0f, (float) WINDOW_X / (float) WINDOW_Y, 0.31f, 1000.0f);
+    Camera camera(glm::vec3(0, 0, 540), 70.0f, (float) WINDOW_X / (float) WINDOW_Y, 0.31f, 1000.0f);
     GeoShader shader("./inc/opengl/shaders/organism/theshader");
     SpriteBatch _spriteBatch(shader);
     shader.Update(camera);
@@ -119,7 +119,7 @@ int main() {
         L.Behavior();
         L.Place();
 
-        _treeSpriteBatch.render(L.tree.Draw());
+//        _treeSpriteBatch.render(L.tree.Draw());
         _spriteBatch.render(L.organisms);
 // Render imgui
         ImGui::Render();

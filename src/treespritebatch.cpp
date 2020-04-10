@@ -35,7 +35,7 @@ void TreeSpriteBatch::renderBatch() {
     glBindVertexArray(_vao);
     //glBindTexture(GL_TEXTURE_2D, _renderBatches[i].texture);
     for (auto &_renderBatche : _renderBatches)
-        glDrawArrays(GL_QUADS, _renderBatche.offset, _renderBatche.numVertices);
+        glDrawArrays( GL_TRIANGLE_STRIP, _renderBatche.offset, _renderBatche.numVertices);
 
     glBindVertexArray(0);
 }
@@ -135,7 +135,7 @@ void TreeSpriteBatch::createVertexArray() {
 void TreeSpriteBatch::render(std::vector<Rectangle> list) {
     begin();
     float i = -0.5f;
-    glm::vec3 col = {0.10f, 0.10f, 0.10f};
+    glm::vec3 col = {0.07f, 0.07f, 0.07f};
     for (auto &rectangle : list) {
         draw({rectangle.x, rectangle.y}, col);
         draw({rectangle.x + rectangle.w, rectangle.y}, col);
