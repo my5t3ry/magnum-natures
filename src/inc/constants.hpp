@@ -18,6 +18,7 @@ const int WINDOW_X = 1600;
 const int WINDOW_Y = 1600;
 const float BOUNDS_X = 320;
 const float BOUNDS_Y = 320;
+const float MAX_WANDERING_DISTANCE = 40;
 
 // Types
 const int HERBAVORE_TYPE = 1;
@@ -27,14 +28,14 @@ const int CORPSE_TYPE = 4;
 
 // Creature stats
 const int CREATURE_MAX_HEALTH = 100;
-const int CREATURE_BEST_SENSE = 5;
+const int CREATURE_BEST_SENSE = 4;
 const int CREATURE_BITE = 5;
 const int CREATURE_EXP_PREG_TIME = 1000;
 const int CREATURE_EXP_AGE = 10000;
 const int CREATURE_HUNGRY_AMOUNT = 50;
 const int CREATURE_STARVE_AMOUNT = 90;
 const float CREATURE_SPEED = .35;
-const float CREATURE_REACH = 1.7;
+const float CREATURE_REACH = 1.3;
 const float CREATURE_MUTATION_PERCENT = .25;
 const float CREATURE_MUTATION_CHANCE = .05;
 

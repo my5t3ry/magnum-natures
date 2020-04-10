@@ -44,8 +44,8 @@ void Organism::Behavior() {
 
     hunger++;
     if (starving)
-        health -= 1;
-    if (able)
+        health -= 2;
+    else if (able)
         if (health < myDNA.maxHealth)
             health += 1;
 }
@@ -86,7 +86,16 @@ void Organism::setTarget() {
 
     if (!hasTarget && !wander) {
         wander = true;
-        Rectangle tmp(getRandom(BOUNDS_X), getRandom(BOUNDS_Y), 0, 0);
+        float targetx = BOUNDS_X + 1.0f;
+        while (targetx > (float) BOUNDS_X || targetx < (float) BOUNDS_X * -1.0f) {
+            targetx = rect.x + getRandom(MAX_WANDERING_DISTANCE);
+        }
+        float targety = BOUNDS_Y + 1.0f;
+        while (targety > (float) BOUNDS_Y || targety < (float) BOUNDS_Y * -1.0f) {
+            targety = rect.y + getRandom(MAX_WANDERING_DISTANCE);
+        }
+
+        Rectangle tmp(targetx, targety, 0, 0);
         wTarget = tmp;
     }
 }

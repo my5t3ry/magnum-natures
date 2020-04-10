@@ -10,8 +10,8 @@ Quadtree::Quadtree(int pLevel, Rectangle pBounds) {
     nodes = new Quadtree[4];
     rect.x = pBounds.x * 1.01;
     rect.y = pBounds.y * 1.05;
-    rect.h = bounds.h*0.6;
-    rect.w = bounds.w*0.6;
+    rect.h = bounds.h*0.5;
+    rect.w = bounds.w*0.5;
 }
 
 void Quadtree::clear() {
@@ -28,8 +28,8 @@ void Quadtree::clear() {
 }
 
 void Quadtree::split() {
-    float subWidth = (bounds.w / 2);
-    float subHeight = (bounds.h / 2);
+    float subWidth = bounds.w / 2;
+    float subHeight = bounds.h / 2;
     float x = rect.x;
     float y = rect.y;
 
