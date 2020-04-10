@@ -10,7 +10,7 @@ out highp float vSides;
 void main()
 {
     gl_Position = MVP * vec4(pos, 0.0,0.9);
-    gl_PointSize = 5.0;
+    gl_PointSize = 6.0;
     fColor = color;
     vSides = sides;
 }
