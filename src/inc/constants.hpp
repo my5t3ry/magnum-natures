@@ -56,6 +56,6 @@ const int MAX_OBJECTS = 40;
 const int MAX_LEVELS = 20;
 
 // Camera
-const float MOVE_AMOUNT = 1.5;
+const float MOVE_AMOUNT = 2.5;
 
 #endif

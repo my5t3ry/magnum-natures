@@ -101,7 +101,7 @@ int main() {
             static float f = 0.0f;
             static int counter = 0;
             ImGui::Begin(
-                    "evolutions");                          // Create a window called "Hello, world!" and append into it.
+                    "evolution");                          // Create a window called "Hello, world!" and append into it.
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate,
                         ImGui::GetIO().Framerate);
             ImGui::Text("Total organisms (%d)", static_cast<int>(L.organisms.size()));
