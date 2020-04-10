@@ -1,6 +1,6 @@
 #version 320 es
 layout(points) in;
-layout(triangle_strip, max_vertices = 2000) out;
+layout(triangle_strip, max_vertices = 64) out;
 
 in highp vec3 vColor[];
 in highp float vSides[];
@@ -17,7 +17,6 @@ void main()
     // Offset from center of point (0.3 to accomodate for aspect ratio)
     vec4 offset = vec4(cos(ang) * 0.3, -sin(ang) * 0.4, 0.0, 0.0);
     gl_Position = gl_in[0].gl_Position - offset;
-
 
     EmitVertex();
   }

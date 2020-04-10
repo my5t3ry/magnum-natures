@@ -40,7 +40,7 @@ void List::Remove() {
 }
 
 void List::Behavior() {
-    for (std::list<Organism>::iterator it = organisms.begin(); it != organisms.end(); it++) {
+    for (auto it = organisms.begin(); it != organisms.end(); it++) {
         if (it->getType() == PLANT_TYPE or it->getType() == CORPSE_TYPE)
             it->grow();
         else {
@@ -57,10 +57,18 @@ void List::Behavior() {
     }
 }
 
+std::list<Organism> List::GetCarnivors(){
+    std::list<Organism> result;
+    std::copy_if(organisms.begin(), organisms.end(), std::back_inserter(result),[](Organism val)
+    {
+        return (val.getType() == CARNIVORE_TYPE);
+    });
+    return result;
+}
+
 void List::Place() {
     tree.clear();
-
-    for (std::list<Organism>::iterator it = organisms.begin(); it != organisms.end(); it++)
+    for (auto it = organisms.begin(); it != organisms.end(); it++)
         tree.insert(&(*it));;
 }
 
@@ -68,9 +76,37 @@ std::vector<Organism *> List::getNear(Organism c) {
     std::vector<Organism *> near;
     near = tree.retrieve(near, c.getRectangle());
 
-    for (std::vector<Organism *>::iterator it = near.begin(); it != near.end(); it++)
+    for (auto it = near.begin(); it != near.end(); it++)
         if (c.getBestSense() < Distance(c.getRectangle(), (*it)->getRectangle()))
             near.erase(it--);
 
     return near;
+}
+
+std::list<Organism> List::GetHerbavors() {
+    std::list<Organism> result;
+    std::copy_if(organisms.begin(), organisms.end(), std::back_inserter(result),[](Organism val)
+    {
+        return (val.getType() == HERBAVORE_TYPE);
+    });
+    return result;
+}
+
+std::list<Organism> List::GetPlants() {
+    std::list<Organism> result;
+    std::copy_if(organisms.begin(), organisms.end(), std::back_inserter(result),[](Organism val)
+    {
+        return (val.getType() == PLANT_TYPE);
+    });
+    return result;
+}
+
+
+std::list<Organism> List::GetCorpses() {
+    std::list<Organism> result;
+    std::copy_if(organisms.begin(), organisms.end(), std::back_inserter(result),[](Organism val)
+    {
+        return (val.getType() == CORPSE_TYPE);
+    });
+    return result;
 }

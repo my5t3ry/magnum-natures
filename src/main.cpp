@@ -16,7 +16,7 @@ int main() {
     glEnable(GL_PROGRAM_POINT_SIZE);
 
     Transform transform;
-    Camera camera(glm::vec3(0, 0, 70), 70.0f, (float) 800 / (float) 600, 0.31f, 1000.0f);
+    Camera camera(glm::vec3(0, 0, 90), 70.0f, (float) 800 / (float) 600, 0.31f, 1000.0f);
     GeoShader shader("./inc/opengl/shaders/theshader");
     SpriteBatch _spriteBatch(shader);
 
@@ -69,22 +69,17 @@ int main() {
             static int counter = 0;
 
             ImGui::Begin(
-                    "Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-            ImGui::Text(
-                    "This is some useful text.");               // Display some text (you can use a format strings too)
-            ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-
-            if (ImGui::Button(
-                    "Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-                counter++;
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
+                    "evolutions");                          // Create a window called "Hello, world!" and append into it.
 
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate,
                         ImGui::GetIO().Framerate);
+            ImGui::Text("Total organisms (%d)", static_cast<int>(L.organisms.size()));
+            ImGui::Text("Carnivors (%d)", static_cast<int>(L.GetCarnivors().size()));
+            ImGui::Text("Herbavors (%d)", static_cast<int>(L.GetHerbavors().size()));
+            ImGui::Text("Plants (%d)", static_cast<int>(L.GetPlants().size()));
+            ImGui::Text("Corpses (%d)", static_cast<int>(L.GetCorpses().size()));
+//            ImGui::Text("Total organisms (%d)", static_cast<int>(L.organisms.size()));
+//            ImGui::Text("Total organisms (%d)", static_cast<int>(L.organisms.size()));
             ImGui::End();
         }
 
@@ -100,7 +95,7 @@ int main() {
         shader.Bind();
         _spriteBatch.begin();
 
-        for (auto & organism : L.organisms)
+        for (auto &organism : L.organisms)
             _spriteBatch.draw(organism.getRectangle(), organism.getVisuals());
 
         _spriteBatch.end();

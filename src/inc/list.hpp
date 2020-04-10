@@ -23,6 +23,14 @@ public:
     std::list<Organism> organisms;
 
     Quadtree tree;
+
+    std::list<Organism> GetCarnivors();
+
+    std::list<Organism> GetHerbavors();
+
+    std::list<Organism> GetCorpses();
+
+    std::list<Organism> GetPlants();
 };
 
 #endif

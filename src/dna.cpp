@@ -22,15 +22,15 @@ DNA::DNA(int t) {
     } else if (t == CARNIVORE_TYPE) {
         type = CARNIVORE_TYPE;
         eatType = HERBAVORE_TYPE;
-        maxHealth = CREATURE_MAX_HEALTH * 2;
+        maxHealth = CREATURE_MAX_HEALTH;
         bestSense = CREATURE_BEST_SENSE * 2;
-        bite = CREATURE_BITE * 4;
+        bite = CREATURE_BITE * 2;
         expectedPregnancyTime = CREATURE_EXP_PREG_TIME;
         expectedAge = CREATURE_EXP_AGE * 2;
-        hungryAmount = CREATURE_HUNGRY_AMOUNT * 2;
-        starveAmount = CREATURE_STARVE_AMOUNT * 2;
-        reach = CREATURE_REACH * 2.0f;
-        speed = CREATURE_SPEED * 2.0f;
+        hungryAmount = CREATURE_HUNGRY_AMOUNT;
+        starveAmount = CREATURE_STARVE_AMOUNT;
+        reach = CREATURE_REACH * 2;
+        speed = CREATURE_SPEED * 2;
         mutationPercent = CREATURE_MUTATION_PERCENT;
         mutationChance = CREATURE_MUTATION_CHANCE;
         appearance.red = 0;
