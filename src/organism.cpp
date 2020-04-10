@@ -1,26 +1,24 @@
 #include "organism.hpp"
 
-#include <random>
-
 Organism::Organism(Rectangle r, DNA d) {
-    rect    = r;
-    myDNA   = d;
+    rect = r;
+    myDNA = d;
 
-    if(rect.x == 0 && rect.y == 0){
+    if (rect.x == 0 && rect.y == 0) {
         rect.x = getRandom(BOUNDS);
         rect.y = getRandom(BOUNDS);
     }
 
-    hunger          = 50;
-    health          = myDNA.maxHealth/2;
-    gender          = rand() % 2;
-    age             = 0;
-    pregnancyTime   = 0;
-    able            = false;
-    pregnancyReady  = false;
-    pregnate        = false;
-    hasTarget       = false;
-    wander          = false;
+    hunger = 50;
+    health = myDNA.maxHealth / 2;
+    gender = rand() % 2;
+    age = 0;
+    pregnancyTime = 0;
+    able = false;
+    pregnancyReady = false;
+    pregnate = false;
+    hasTarget = false;
+    wander = false;
 }
 
 void Organism::Behavior() {
@@ -52,34 +50,33 @@ void Organism::Behavior() {
 }
 
 void Organism::Priority() {
-
-    hungry = false;
-    starving = false;
-    able = true;
     if (hunger > myDNA.hungryAmount) {
         starving = false;
         hungry = true;
         able = false;
-    }
-    if (hunger >= myDNA.starveAmount) {
+    } else if (hunger > myDNA.starveAmount) {
         hungry = true;
         starving = true;
         able = false;
+    } else {
+        hungry = false;
+        starving = false;
+        able = true;
     }
 }
 
 void Organism::setTarget() {
-    std::shuffle(nearMe.begin(), nearMe.end(), std::mt19937(std::random_device()()));
+    std::random_shuffle(nearMe.begin(), nearMe.end());
 
-    for (auto & it : nearMe) {
-        if ((it->getType() == myDNA.eatType && hungry) || (it->getType() == CORPSE_TYPE && starving)) {
-            target = it;
+    for (std::vector<Organism *>::iterator it = nearMe.begin(); it != nearMe.end(); it++) {
+        if (((*it)->getType() == myDNA.eatType && hungry) || ((*it)->getType() == CORPSE_TYPE && starving)) {
+            target = *it;
             hasTarget = true;
             wander = false;
             break;
         }
-        if (it->getType() == myDNA.type && able && it->getGender() != gender) {
-            target = it;
+        if ((*it)->getType() == myDNA.type && able && (*it)->getGender() != gender) {
+            target = *it;
             hasTarget = true;
             wander = false;
             break;
@@ -94,8 +91,8 @@ void Organism::setTarget() {
 }
 
 void Organism::checkTarget() {
-    for (auto & it : nearMe)
-        if (target == it)
+    for (std::vector<Organism *>::iterator it = nearMe.begin(); it != nearMe.end(); it++)
+        if (target == *it)
             return;
 
     hasTarget = false;
@@ -164,11 +161,9 @@ void Organism::passDNA(DNA d) {
 }
 
 void Organism::grow() {
-    if (health <= myDNA.maxHealth)
+    if (health < myDNA.maxHealth)
         health += myDNA.growAmount;
 }
-
-
 
 void Organism::takeBite(int bite) {
     health -= bite;

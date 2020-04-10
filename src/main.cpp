@@ -16,7 +16,7 @@ int main() {
     glEnable(GL_PROGRAM_POINT_SIZE);
 
     Transform transform;
-    Camera camera(glm::vec3(0, 0, 90), 70.0f, (float) 800 / (float) 600, 0.31f, 1000.0f);
+    Camera camera(glm::vec3(0, 0, 70), 70.0f, (float) 800 / (float) 600, 0.31f, 1000.0f);
     GeoShader shader("./inc/opengl/shaders/theshader");
     SpriteBatch _spriteBatch(shader);
 

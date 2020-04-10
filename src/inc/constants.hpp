@@ -12,10 +12,10 @@
 
 // General
 const int HERBAVORES = 100;
-const int CARNIVORES = 5;
+const int CARNIVORES = 15;
 const int PLANTS = 3000;
-const int WINDOW_X = 1000;
-const int WINDOW_Y = 1000;
+const int WINDOW_X = 1920;
+const int WINDOW_Y = 1280;
 const float BOUNDS = 30;
 
 // Types
