@@ -1,6 +1,7 @@
 #include "opengl/geoshader.hpp"
 #include <iostream>
 #include <fstream>
+#include <Magnum/GL/OpenGL.h>
 
 GeoShader::GeoShader(const std::string &fileName) {
     m_program = glCreateProgram();

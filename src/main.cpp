@@ -2,52 +2,39 @@
 
 #include "main.hpp"
 
-int main() {
+int main(int argc, char **argv) {
     srand(time(NULL));
+    /* Initialize the library */
+    if (!glfwInit()) return -1;
 
-    Window main(WINDOW_X, WINDOW_Y, "natures");
-    List L;
-    Event e;
-    glEnable(GL_PROGRAM_POINT_SIZE);
+    /* Create a windowed mode window and its OpenGL context */
+    GLFWwindow *const window = glfwCreateWindow(
+            800, 600, "Magnum Plain GLFW Triangle Example", nullptr, nullptr);
+    if (!window) {
+        glfwTerminate();
+        return -1;
+    }
 
-    Transform transform;
-    Camera camera(glm::vec3(0, 0, 70), 70.0f, (float) 800 / (float) 600, 0.31f, 1000.0f);
-    GeoShader shader("./inc/opengl/shaders/theshader");
-    SpriteBatch _spriteBatch(shader);
+    /* Make the window's context current */
+    glfwMakeContextCurrent(window);
+    {
+        /* Create Magnum context in an isolated scope */
+        List L;
 
-    _spriteBatch.init();
-    shader.Bind();
+        Magnum::Platform::GLContext ctx{argc, argv};
+        Transform transform;
+        Camera camera(glm::vec3(0, 0, 70), 70.0f, (float) 800 / (float) 600, 0.31f, 1000.0f);
+        GeoShader shader("./inc/opengl/shaders/theshader");
+        SpriteBatch _spriteBatch(shader);
 
-    int uniModel = glGetUniformLocation(shader.m_program, "MVP");
-    glUniformMatrix4fv(uniModel, 1, false, &transform.GetMVP(camera)[0][0]);
+        _spriteBatch.init();
+        shader.Bind();
 
-    Timer fps;
-    int speed = 60;
-    bool pause = false;
-    while (e.gRun()) {
-        fps.Start();
-        while (e.Poll()) {
-            if (e.gEventType() == SDL_QUIT)
-                e.off();
-            else if (e.gEventType() == SDL_KEYDOWN)
-                switch (e.gEvent().key.keysym.sym) {
-                    case SDLK_q:
-                        e.off();
-                        break;
-                    case SDLK_EQUALS:
-                        speed += 30;
-                        break;
-                    case SDLK_MINUS:
-                        if (speed > 30) speed -= 30;
-                        break;
-                    case SDLK_SPACE:
-                        pause = (pause) ? (0) : (1);
-                        break;
-                }
-        }
+        int uniModel = glGetUniformLocation(shader.m_program, "MVP");
+        glUniformMatrix4fv(uniModel, 1, false, &transform.GetMVP(camera)[0][0]);
 
-        if (!pause) {
-            main.Clear();
+        while (!glfwWindowShouldClose(window)) {
+            Magnum::GL::defaultFramebuffer.clear(Magnum::GL::FramebufferClear::Color);
 
             L.Remove();
             L.Behavior();
@@ -61,13 +48,14 @@ int main() {
 
             _spriteBatch.end();
             _spriteBatch.renderBatch();
-//                        shader.update()
-            main.swapBuffers();
+            glfwSwapBuffers(window);
+
+            /* Poll for and process events */
+            glfwPollEvents();
         }
-
-        if (fps.getTicks() < (1000 / speed))
-            SDL_Delay((1000 / speed) - fps.getTicks());
-
     }
+
     return 0;
+
 }
+

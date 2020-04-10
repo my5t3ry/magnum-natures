@@ -1,3 +1,4 @@
+#include <Magnum/GL/OpenGL.h>
 #include "opengl/spritebatch.hpp"
 
 SpriteBatch::SpriteBatch(GeoShader theshader) : _vbo(0), _vao(0), shader(theshader) {}

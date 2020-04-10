@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <vector>
-#include <GL/glew.h>
 
 #include "geoshader.hpp"
 #include "dna.hpp"
