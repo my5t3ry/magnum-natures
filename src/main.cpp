@@ -15,7 +15,7 @@ int main() {
     Window main(WINDOW_X, WINDOW_Y, "natures");
     List L;
 
-    Camera camera(glm::vec3(0, 0, 540), 70.0f, (float) WINDOW_X / (float) WINDOW_Y, 0.31f, 1000.0f);
+    Camera camera(glm::vec3(0, 0, 800), 70.0f, (float) WINDOW_X / (float) WINDOW_Y, 0.31f, 1000.0f);
     GeoShader shader("./inc/opengl/shaders/organism/theshader");
     SpriteBatch _spriteBatch(shader);
     shader.Update(camera);
@@ -36,13 +36,14 @@ int main() {
     ImGuiIO &io = ImGui::GetIO();
     (void) io;
 
-    float scaleFactor = 1.5f;
+    float scaleFactor = 1.9f;
     io.Fonts->AddFontFromFileTTF("inc/SourceSansPro-Regular.ttf", 18.0f * scaleFactor, NULL, NULL);
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
     ImGuiStyle &style = ImGui::GetStyle();
     style.ScaleAllSizes(scaleFactor);
+    style.Alpha=0.8;
 
     // Setup Platform/Renderer bindings
     // window is the SDL_Window*
@@ -97,9 +98,9 @@ int main() {
             static float f = 0.0f;
             static int counter = 0;
             ImGui::Begin(
-                    "evolution");                          // Create a window called "Hello, world!" and append into it.
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate,
-                        ImGui::GetIO().Framerate);
+                    "->");                          // Create a window called "Hello, world!" and append into it.
+            ImGui::Text("%.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate) ;
+            ImGui::Text("%.1f fps",ImGui::GetIO().Framerate);
             ImGui::Text("Total organisms (%d)", static_cast<int>(L.organisms.size()));
             ImGui::Text("Carnivors (%d)", static_cast<int>(L.GetCarnivors().size()));
             ImGui::Text("Herbavors (%d)", static_cast<int>(L.GetHerbavors().size()));
@@ -119,7 +120,7 @@ int main() {
         L.Behavior();
         L.Place();
 
-//        _treeSpriteBatch.render(L.tree.Draw());
+        _treeSpriteBatch.render(L.tree.Draw());
         _spriteBatch.render(L.organisms);
 // Render imgui
         ImGui::Render();

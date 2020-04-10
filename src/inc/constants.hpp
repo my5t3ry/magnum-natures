@@ -14,10 +14,10 @@
 const int HERBAVORES = 520;
 const int CARNIVORES = 35;
 const int PLANTS = 9000;
-const int WINDOW_X = 1920;
-const int WINDOW_Y = 1280;
+const int WINDOW_X = 1600;
+const int WINDOW_Y = 1600;
 const float BOUNDS_X = 320;
-const float BOUNDS_Y = 180;
+const float BOUNDS_Y = 320;
 
 // Types
 const int HERBAVORE_TYPE = 1;
