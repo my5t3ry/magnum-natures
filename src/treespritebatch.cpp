@@ -35,7 +35,7 @@ void TreeSpriteBatch::renderBatch() {
     glBindVertexArray(_vao);
     //glBindTexture(GL_TEXTURE_2D, _renderBatches[i].texture);
     for (auto &_renderBatche : _renderBatches)
-        glDrawArrays(GL_QUADS, _renderBatche.offset, _renderBatche.numVertices);
+        glDrawArrays(GL_QUAD_STRIP, _renderBatche.offset, _renderBatche.numVertices);
 
     glBindVertexArray(0);
 }
