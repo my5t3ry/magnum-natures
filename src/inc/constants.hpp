@@ -11,9 +11,9 @@
 #include <glm/gtx/transform.hpp>
 
 // General
-const int HERBAVORES = 100;
-const int CARNIVORES = 15;
-const int PLANTS = 3000;
+const int HERBAVORES = 120;
+const int CARNIVORES = 10;
+const int PLANTS = 3500;
 const int WINDOW_X = 1920;
 const int WINDOW_Y = 1280;
 const float BOUNDS = 30;
