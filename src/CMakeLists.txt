@@ -40,6 +40,7 @@ add_executable(natures
         spritebatch.cpp
         list.cpp
         dna.cpp
+        timer.cpp
         organism.cpp
         quadtree.cpp
         window.cpp

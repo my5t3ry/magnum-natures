@@ -30,10 +30,8 @@ int main() {
     ImGui::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
     (void) io;
-
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
-
     // Setup Platform/Renderer bindings
     // window is the SDL_Window*
     // contex is the SDL_GLContext
@@ -42,8 +40,12 @@ int main() {
 
     bool show_demo_window = true;
 
+    Timer fps;
+    int speed = 60;
     bool done = false;
     while (!done) {
+        fps.Start();
+
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
             // Forward to Imgui
@@ -98,8 +100,8 @@ int main() {
         shader.Bind();
         _spriteBatch.begin();
 
-        for (std::list<Organism>::iterator it = L.organisms.begin(); it != L.organisms.end(); it++)
-            _spriteBatch.draw(it->getRectangle(), it->getVisuals());
+        for (auto & organism : L.organisms)
+            _spriteBatch.draw(organism.getRectangle(), organism.getVisuals());
 
         _spriteBatch.end();
         _spriteBatch.renderBatch();
@@ -108,6 +110,8 @@ int main() {
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         SDL_GL_SwapWindow(main.main);
+        if (fps.getTicks() < (1000 / speed))
+            SDL_Delay((1000 / speed) - fps.getTicks());
 
     }
     ImGui_ImplOpenGL3_Shutdown();
