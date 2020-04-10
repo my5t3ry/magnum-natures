@@ -9,7 +9,7 @@ int main(int argc, char **argv) {
 
     /* Create a windowed mode window and its OpenGL context */
     GLFWwindow *const window = glfwCreateWindow(
-            800, 600, "Magnum Plain GLFW Triangle Example", nullptr, nullptr);
+            WINDOW_X, WINDOW_Y, "Magnum Plain GLFW Triangle Example", nullptr, nullptr);
     if (!window) {
         glfwTerminate();
         return -1;
