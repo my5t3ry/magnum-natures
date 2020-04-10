@@ -14,11 +14,11 @@ Window::Window(int width, int height, const std::string &title) {
                             SDL_WINDOW_OPENGL);
     glContext = SDL_GL_CreateContext(main);
     SDL_GL_SetSwapInterval(0);
-    GLenum status = glewInit();
-    closed = false;
-
-    if (status != GLEW_OK)
-        std::cerr << "Failiure to init." << std::endl;
+//    GLenum status = glewInit();
+//    closed = false;
+//
+//    if (status != GLEW_OK)
+//        std::cerr << "Failiure to init." << std::endl;
 }
 
 Window::~Window() {

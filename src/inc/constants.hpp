@@ -1,5 +1,13 @@
 #ifndef constants_h
 #define constants_h
+#define GL_GLEXT_PROTOTYPES
+#define GLM_ENABLE_EXPERIMENTAL
+#include <SDL.h>
+#include <SDL_opengl.h>
+#include <vector>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
 
 // General
 const int HERBAVORES = 200;

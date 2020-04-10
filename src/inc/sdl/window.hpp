@@ -1,10 +1,8 @@
 #ifndef window_h
 #define window_h
 
-#include <SDL2/SDL.h>
 #include <string>
 #include <iostream>
-#include <GL/glew.h>
 
 #include "constants.hpp"
 
@@ -17,13 +15,14 @@ public:
     void Clear();
 
     void swapBuffers();
+    SDL_Window *main;
+    SDL_GLContext glContext;
 
     bool getClosed() { return closed; };
 
 
 private:
-    SDL_Window *main;
-    SDL_GLContext glContext;
+
     bool closed;
 };
 

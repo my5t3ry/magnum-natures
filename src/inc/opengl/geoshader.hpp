@@ -4,8 +4,6 @@
 #define geoshader_h
 
 #include <string>
-#include <GL/glew.h>
-
 #include "constants.hpp"
 #include "transform.hpp"
 
