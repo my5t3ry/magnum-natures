@@ -15,23 +15,20 @@ int main() {
     Window main(WINDOW_X, WINDOW_Y, "natures");
     List L;
 
-    Transform transform;
     Camera camera(glm::vec3(0, 0, 500), 70.0f, (float) WINDOW_X / (float) WINDOW_Y, 0.31f, 1000.0f);
     GeoShader shader("./inc/opengl/shaders/organism/theshader");
     SpriteBatch _spriteBatch(shader);
+    shader.Update(camera);
+
     shader.Bind();
     _spriteBatch.init();
-
-    int uniModel = glGetUniformLocation(shader.m_program, "MVP");
-    glUniformMatrix4fv(uniModel, 1, false, &transform.GetMVP(camera)[0][0]);
-
     GeoShader treeShader("./inc/opengl/shaders/tree/theshader");
     TreeSpriteBatch _treeSpriteBatch(treeShader);
+    treeShader.Update(camera);
     treeShader.Bind();
     _treeSpriteBatch.init();
 
-    int treeUniModel = glGetUniformLocation(treeShader.m_program, "MVP");
-    glUniformMatrix4fv(treeUniModel, 1, false, &transform.GetMVP(camera)[0][0]);
+
     glEnable(GL_PROGRAM_POINT_SIZE);
 
     IMGUI_CHECKVERSION();
@@ -86,9 +83,8 @@ int main() {
                     default:
                         break;
                 }
-            int uniModel = glGetUniformLocation(shader.m_program, "MVP");
-            glUniformMatrix4fv(uniModel, 1, false, &transform.GetMVP(camera)[0][0]);
-
+            shader.Update(camera);
+            treeShader.Update(camera);
         }
 
 // Start the Dear ImGui frame
@@ -96,7 +92,7 @@ int main() {
         ImGui_ImplSDL2_NewFrame(main.main);
         ImGui::NewFrame();
 
-        ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiCond_FirstUseEver);
         {
             static float f = 0.0f;
             static int counter = 0;
@@ -123,10 +119,8 @@ int main() {
         L.Behavior();
         L.Place();
 
-//        treeShader.Bind();
+        _treeSpriteBatch.render(L.tree.Draw());
         _spriteBatch.render(L.organisms);
-//        _treeSpriteBatch.render(L.tree.Draw());
-//                        shader.update()
 // Render imgui
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

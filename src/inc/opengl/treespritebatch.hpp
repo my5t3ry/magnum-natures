@@ -14,13 +14,17 @@
 class TreeSpriteBatch {
 public:
     TreeSpriteBatch(GeoShader theshader);
+
     void init();
+
     void begin();
+
     void end();
 
-    void draw(Rectangle r, DNA::Visuals v);
+    void draw(glm::vec2 pos, glm::vec3 v);
 
     void renderBatch();
+
     void render(std::vector<Rectangle> list);
 
 
@@ -28,11 +32,12 @@ private:
     void createRenderBatches();
 
     void createVertexArray();
+
     GLuint _vbo;
     GLuint _vao;
 
-    std::vector<std::pair<Rectangle, DNA::Visuals> *> _gfxPtr;
-    std::vector<std::pair<Rectangle, DNA::Visuals>> _gfx;
+    std::vector<std::pair<glm::vec2, glm::vec3> *> _gfxPtr;
+    std::vector<std::pair<glm::vec2, glm::vec3>> _gfx;
     std::vector<RenderBatch> _renderBatches;
 
     GeoShader shader;

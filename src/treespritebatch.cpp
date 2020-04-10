@@ -24,8 +24,8 @@ void TreeSpriteBatch::end() {
     createRenderBatches();
 }
 
-void TreeSpriteBatch::draw(Rectangle r, DNA::Visuals v) {
-    _gfx.emplace_back(std::make_pair(r, v));
+void TreeSpriteBatch::draw(glm::vec2 pos, glm::vec3 v) {
+    _gfx.emplace_back(std::make_pair(pos, v));
 }
 
 void TreeSpriteBatch::renderBatch() {
@@ -45,7 +45,7 @@ void TreeSpriteBatch::createRenderBatches() {
     std::vector<float> vertices;
     // Resize the buffer to the exact size we need so we can treat
     // it like an array
-    vertices.resize(_gfxPtr.size() * 8);
+    vertices.resize(_gfxPtr.size() * 6);
 
     if (_gfxPtr.empty()) {
         return;
@@ -55,17 +55,15 @@ void TreeSpriteBatch::createRenderBatches() {
     int cv = 0; // current vertex
 
     //Add the first batch
-    _renderBatches.emplace_back(offset, 8);
+    _renderBatches.emplace_back(offset, 6);
     vertices[cv++] = _gfxPtr[0]->first.x;
     vertices[cv++] = _gfxPtr[0]->first.y;
-    vertices[cv++] = _gfxPtr[0]->first.w;
-    vertices[cv++] = _gfxPtr[0]->first.h;
-    vertices[cv++] = _gfxPtr[0]->second.red;
-    vertices[cv++] = _gfxPtr[0]->second.green;
-    vertices[cv++] = _gfxPtr[0]->second.blue;
+    vertices[cv++] = _gfxPtr[0]->second.x;
+    vertices[cv++] = _gfxPtr[0]->second.y;
+    vertices[cv++] = _gfxPtr[0]->second.z;
     vertices[cv++] = SIDES;
 
-    offset += 8;
+    offset += 6;
 
     //Add all the rest of the glyphs
     //std::cout << "ptr size = " <<  _gfxPtr.size() << std::endl;
@@ -73,21 +71,19 @@ void TreeSpriteBatch::createRenderBatches() {
         // Check if this glyph can be part of the current batch
         //if (_gfxPtr[cg]->texture != _gfxPtr[cg - 1]->texture) {
         // Make a new batch
-        //    _renderBatches.emplace_back(offset, 8);
+        //    _renderBatches.emplace_back(offset, 6);
         //} else {
         // If its part of the current batch, just increase numVertices
-        _renderBatches.back().numVertices += 8;
+        _renderBatches.back().numVertices += 6;
         //}
         vertices[cv++] = _gfxPtr[cg]->first.x;
         vertices[cv++] = _gfxPtr[cg]->first.y;
-        vertices[cv++] = _gfxPtr[cg]->first.w;
-        vertices[cv++] = _gfxPtr[cg]->first.h;
-        vertices[cv++] = _gfxPtr[cg]->second.red;
-        vertices[cv++] = _gfxPtr[cg]->second.green;
-        vertices[cv++] = _gfxPtr[cg]->second.blue;
+        vertices[cv++] = _gfxPtr[cg]->second.x;
+        vertices[cv++] = _gfxPtr[cg]->second.y;
+        vertices[cv++] = _gfxPtr[cg]->second.z;
         vertices[cv++] = SIDES;
 
-        offset += 8;
+        offset += 6;
     }
 
     // Bind our VBO
@@ -115,8 +111,8 @@ void TreeSpriteBatch::createVertexArray() {
     glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 
     //Tell opengl what attribute arrays we need
-    GLint recAttrib = glGetAttribLocation(shader.m_program, "rec");
-    glEnableVertexAttribArray(recAttrib);
+    GLint posAttrib = glGetAttribLocation(shader.m_program, "pos");
+    glEnableVertexAttribArray(posAttrib);
 
     GLint colAttrib = glGetAttribLocation(shader.m_program, "color");
     glEnableVertexAttribArray(colAttrib);
@@ -124,23 +120,28 @@ void TreeSpriteBatch::createVertexArray() {
     GLint sidesAttrib = glGetAttribLocation(shader.m_program, "sides");
     glEnableVertexAttribArray(sidesAttrib);
 
-    //glEnableVertexAttribArray(2);
+    //glEnableVertexAttribArray(2);                        L
 
     //This is the position attribute pointer
 
-    glVertexAttribPointer(recAttrib, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0);
+    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
     //This is the color attribute pointer
-    glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) (4 * sizeof(float)));
+    glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *) (2 * sizeof(float)));
     //This is the UV attribute pointer
-    glVertexAttribPointer(sidesAttrib, 1, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) (7 * sizeof(float)));
+    glVertexAttribPointer(sidesAttrib, 1, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *) (5 * sizeof(float)));
     glBindVertexArray(0);
 }
 
 void TreeSpriteBatch::render(std::vector<Rectangle> list) {
     begin();
     float i = -0.5f;
+    glm::vec3 col = {0.10f, 0.10f, 0.10f};
     for (auto &rectangle : list) {
-        draw(rectangle, {0.5f + i, 0.8f - 1, 0.2f + 1});
+        draw({rectangle.x, rectangle.y}, col);
+        draw({rectangle.x + rectangle.w, rectangle.y}, col);
+        draw({rectangle.x, rectangle.y + rectangle.h}, col);
+        draw({rectangle.x + rectangle.w, rectangle.y + rectangle.h}, col);
+//        draw(rectangle, {0.5f + i, 0.8f - 1, 0.2f + 1});
         i += 0.0005f;
     }
 

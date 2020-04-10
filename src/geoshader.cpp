@@ -35,11 +35,9 @@ void GeoShader::Bind() {
 }
 
 
-void GeoShader::Update(const Transform &transform, const Camera &camera) {
-    glm::mat4 MVP = transform.GetMVP(camera);
-    glm::mat4 Normal = transform.GetModel();
-
-    glUniformMatrix4fv(m_uniforms[0], 1, GL_FALSE, &MVP[0][0]);
+void GeoShader::Update(const Camera &camera) {
+    int treeUniModel = glGetUniformLocation(m_program, "MVP");
+    glUniformMatrix4fv(treeUniModel, 1, false, &transform.GetMVP(camera)[0][0]);
 }
 
 GLuint GeoShader::CreateShader(const std::string &text, GLenum shaderType) {

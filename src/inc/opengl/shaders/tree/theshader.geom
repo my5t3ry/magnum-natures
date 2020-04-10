@@ -2,7 +2,6 @@
 layout(points) in;
 layout(triangle_strip, max_vertices = 64) out;
 
-in highp vec4 rectangle[];
 in highp vec3 vColor[];
 in highp float vSides[];
 out highp vec3 fColor;
@@ -14,12 +13,7 @@ void main()
     fColor = vColor[0];
     gl_Position = gl_in[0].gl_Position;
     EmitVertex();
-    gl_Position = vec4(rectangle[0][2]+gl_in[0].gl_Position[0], rectangle[0][3]+gl_in[0].gl_Position[1], gl_in[0].gl_Position[2], gl_in[0].gl_Position[3]);
-    EmitVertex();
-    gl_Position = vec4(rectangle[0][2]+gl_in[0].gl_Position[0], gl_in[0].gl_Position[1], gl_in[0].gl_Position[2], gl_in[0].gl_Position[3]);
-    EmitVertex();
-    gl_Position = vec4(gl_in[0].gl_Position[0], rectangle[0][3]+gl_in[0].gl_Position[1], gl_in[0].gl_Position[2], gl_in[0].gl_Position[3]);
-    EmitVertex();
+
     //
     //    for (float i = 0.0; i <= vSides[0]; i+=1.0) {	        // Angle between each side in radians
     //        float ang = PI * 2.0 / vSides[0] * i;
